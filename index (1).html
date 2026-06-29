@@ -1,0 +1,2832 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rizky & Nadifa 💙</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ──
+   Konsep: "late-night cinema under the stars" — nonton film bareng tengah malam.
+   Dark blue tetap jadi basis (sesuai request), tapi diperdalam + ditambah SATU aksen
+   gold (cahaya proyektor bioskop) sebagai elemen premium, dipakai hemat & sengaja. */
+:root {
+  --void:    #050810;
+  --night:   #0A1124;
+  --deep:    #0D1B3E;
+  --ocean:   #14245A;
+  --card:    #0F1D45;
+  --card2:   #16245A;
+  --border:  rgba(94,200,255,0.12);
+  --border2: rgba(94,200,255,0.28);
+  --sky:     #5EC8FF;
+  --sky-dim: rgba(94,200,255,0.10);
+  --sky-glow:rgba(94,200,255,0.22);
+  --pink:    #FF9EC4;
+  --pink-dim:rgba(255,158,196,0.12);
+  --gold:    #E8C778;
+  --gold-dim:rgba(232,199,120,0.14);
+  --gold-glow:rgba(232,199,120,0.35);
+  --cream:   #EAF2FF;
+  --muted:   #7BA0C9;
+  --faint:   #3D5578;
+  --font-d:  'Playfair Display', Georgia, serif;
+  --font-b:  'Inter', system-ui, sans-serif;
+  --font-m:  'JetBrains Mono', 'SF Mono', monospace;
+  --r:       16px;
+  --r-sm:    10px;
+  --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-b);
+  background: var(--void);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(94,200,255,0.10), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 85% 15%, rgba(232,199,120,0.05), transparent 55%),
+    linear-gradient(180deg, var(--night) 0%, var(--void) 45%, #03050C 100%);
+  background-attachment: fixed;
+  color: var(--cream);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+button { cursor: pointer; font-family: var(--font-b); }
+input, textarea, select { font-family: var(--font-b); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+/* ── FILM GRAIN OVERLAY ── */
+#grain-overlay {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  opacity: 0.05; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── LETTERBOX BARS (signature cinematic device) ── */
+.letterbox-top, .letterbox-bottom {
+  position: fixed; left: 0; right: 0; height: 10px; z-index: 45;
+  background: var(--void); pointer-events: none;
+}
+.letterbox-top { top: 0; border-bottom: 1px solid var(--gold-glow); box-shadow: 0 1px 12px -2px var(--gold-glow); }
+.letterbox-bottom { bottom: 0; border-top: 1px solid var(--gold-glow); box-shadow: 0 -1px 12px -2px var(--gold-glow); }
+
+/* ── LIGHT LEAK SWEEP (page-load moment) ── */
+#light-leak {
+  position: fixed; inset: 0; z-index: 40; pointer-events: none;
+  background: radial-gradient(ellipse 60% 40% at 20% 0%, rgba(232,199,120,0.18), transparent 60%);
+  opacity: 0; animation: leak-sweep 2.6s var(--ease-soft) 0.1s forwards;
+}
+@keyframes leak-sweep {
+  0%   { opacity: 0; transform: translateX(-10%); }
+  35%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(15%); }
+}
+
+
+/* ── STARS BACKGROUND ── */
+#stars-canvas {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 10px; z-index: 50;
+  background: rgba(5,8,16,0.82);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 rgba(232,199,120,0.06);
+  padding: 0 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 52px;
+}
+.nav-brand {
+  font-family: var(--font-d);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--sky);
+  letter-spacing: 0.02em;
+}
+.nav-brand span { color: var(--gold); }
+.nav-tabs {
+  display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+.nav-tab {
+  background: none; border: none; color: var(--muted);
+  font-size: 0.78rem; font-weight: 500;
+  padding: 8px 14px; border-radius: 20px;
+  white-space: nowrap; transition: 0.22s var(--ease-soft);
+}
+.nav-tab:hover { color: var(--cream); transform: translateY(-1px); }
+.nav-tab.active {
+  background: var(--sky-dim);
+  color: var(--sky);
+  border: 1px solid var(--gold-glow);
+}
+
+/* ── MAIN ── */
+main { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 0 16px 80px; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── HERO — cinematic timecode treatment ── */
+.hero {
+  text-align: center;
+  padding: 72px 20px 52px;
+  position: relative;
+}
+.hero-eyebrow {
+  font-family: var(--font-m);
+  font-size: 0.68rem; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 22px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  opacity: 0; animation: rise-in 0.8s var(--ease-soft) 0.15s forwards;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; width: 28px; height: 1px; background: var(--gold); opacity: 0.5;
+}
+.hero-eyebrow .rec-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--pink);
+  display: inline-block; animation: rec-blink 1.6s ease-in-out infinite;
+}
+@keyframes rec-blink { 0%,100%{ opacity:1; } 50%{ opacity:0.25; } }
+.hero-title {
+  font-family: var(--font-d);
+  font-size: clamp(2.9rem, 7.5vw, 5.2rem);
+  font-weight: 700; letter-spacing: -0.01em;
+  line-height: 1.05; color: var(--cream);
+  margin-bottom: 10px;
+  opacity: 0; animation: rise-in 0.9s var(--ease-soft) 0.32s forwards;
+}
+.hero-title .amp {
+  color: var(--gold);
+  font-style: italic; font-weight: 400;
+  font-size: 0.8em;
+  text-shadow: 0 0 24px var(--gold-glow);
+}
+.hero-sub {
+  font-size: 0.9rem; color: var(--muted);
+  margin-bottom: 40px; letter-spacing: 0.02em;
+  opacity: 0; animation: rise-in 0.9s var(--ease-soft) 0.46s forwards;
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* timecode display — gaya readout editor video: 00 : 14 : 32 : 08 */
+.countdown {
+  display: flex; justify-content: center; align-items: stretch; gap: 0;
+  margin: 0 auto 18px;
+  opacity: 0; animation: rise-in 0.9s var(--ease-soft) 0.6s forwards;
+}
+.cd-unit {
+  text-align: center;
+  padding: 18px 18px;
+  border-right: 1px solid var(--border);
+  min-width: 72px;
+  position: relative;
+}
+.cd-unit:last-child { border-right: none; }
+.cd-val {
+  font-family: var(--font-m);
+  font-size: 2.2rem; font-weight: 600;
+  color: var(--sky); line-height: 1;
+  display: block;
+  text-shadow: 0 0 18px var(--sky-glow);
+  font-variant-numeric: tabular-nums;
+}
+.cd-lbl {
+  font-family: var(--font-m);
+  font-size: 0.6rem; font-weight: 500;
+  color: var(--faint); text-transform: uppercase;
+  letter-spacing: 0.14em; margin-top: 6px; display: block;
+}
+.countdown-wrap {
+  background: linear-gradient(180deg, var(--card), var(--deep));
+  border: 1px solid var(--gold-glow);
+  border-radius: var(--r);
+  overflow: hidden;
+  display: inline-flex;
+  box-shadow: 0 12px 40px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.timecode-label {
+  font-family: var(--font-m); font-size: 0.6rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold); opacity: 0.8;
+  text-align: center; margin-bottom: 10px;
+  opacity: 0; animation: rise-in 0.9s var(--ease-soft) 0.55s forwards;
+}
+.hero-heart {
+  font-size: 2rem; animation: heartbeat 2s ease-in-out infinite;
+  opacity: 0; animation: rise-in 0.9s var(--ease-soft) 0.85s forwards, heartbeat 2s ease-in-out 1.8s infinite;
+}
+@keyframes heartbeat {
+  0%,100%{ transform:scale(1); }
+  14%{ transform:scale(1.2); }
+  28%{ transform:scale(1); }
+  42%{ transform:scale(1.15); }
+  70%{ transform:scale(1); }
+}
+.since-label {
+  font-size: 0.8rem; color: var(--muted);
+  margin-top: 14px; letter-spacing: 0.05em;
+}
+.since-label strong { color: var(--pink); }
+
+/* ── CARDS ── */
+.card {
+  background: linear-gradient(165deg, var(--card), var(--deep));
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 24px;
+  margin-bottom: 14px;
+  transition: 0.3s var(--ease-soft);
+  box-shadow: 0 8px 24px -12px rgba(0,0,0,0.4);
+}
+.card:hover { border-color: var(--gold-glow); box-shadow: 0 12px 32px -10px rgba(0,0,0,0.5); }
+
+/* Scroll-reveal — dipakai lewat IntersectionObserver di JS */
+.reveal {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.6s var(--ease-soft), transform 0.6s var(--ease-soft);
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+.card-head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px;
+}
+.card-icon { font-size: 1.3rem; }
+.card-title {
+  font-family: var(--font-d);
+  font-size: 1.15rem; font-weight: 600;
+  color: var(--cream);
+}
+.card-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+/* ── SPIN WHEEL ── */
+.wheel-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+}
+#wheel-canvas {
+  border-radius: 50%;
+  box-shadow: 0 0 40px -10px rgba(94,200,255,0.3);
+  max-width: 280px; width: 100%;
+  cursor: pointer;
+}
+.wheel-controls {
+  display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%;
+}
+.spin-btn {
+  background: linear-gradient(135deg, var(--sky), #2196F3);
+  border: none; border-radius: 30px;
+  color: #050810; font-weight: 700; font-size: 1rem;
+  padding: 14px 40px; transition: 0.2s;
+  box-shadow: 0 4px 20px -4px rgba(94,200,255,0.4);
+}
+.spin-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px -4px rgba(94,200,255,0.5); }
+.spin-btn:active { transform: translateY(0); }
+.spin-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.wheel-result {
+  text-align: center;
+  font-family: var(--font-d);
+  font-size: 1.2rem; font-style: italic;
+  color: var(--pink);
+  min-height: 36px;
+  transition: opacity 0.3s;
+}
+.wheel-items {
+  width: 100%;
+}
+.wheel-items-label {
+  font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px;
+}
+.wheel-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.wheel-tag {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--sky-dim); border: 1px solid var(--border);
+  border-radius: 20px; padding: 5px 12px;
+  font-size: 0.78rem; color: var(--muted);
+}
+.wheel-tag .del-btn {
+  background: none; border: none; color: var(--faint);
+  font-size: 0.7rem; padding: 0; line-height: 1;
+  transition: color 0.15s;
+}
+.wheel-tag .del-btn:hover { color: var(--pink); }
+.add-item-row {
+  display: flex; gap: 8px; margin-top: 10px;
+}
+.add-input {
+  flex: 1; background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); color: var(--cream);
+  padding: 9px 14px; font-size: 0.85rem; outline: none;
+  transition: border-color 0.18s;
+}
+.add-input:focus { border-color: var(--sky); }
+.add-input::placeholder { color: var(--faint); }
+.add-btn {
+  background: var(--sky-dim); border: 1px solid var(--border);
+  border-radius: var(--r-sm); color: var(--sky);
+  font-size: 0.85rem; font-weight: 600; padding: 9px 16px;
+  transition: 0.15s;
+}
+.add-btn:hover { background: var(--sky-glow); border-color: var(--border2); }
+.wheel-type-row {
+  display: flex; gap: 8px; margin-bottom: 14px;
+}
+.type-btn {
+  flex: 1; background: var(--card2); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--muted);
+  font-size: 0.78rem; font-weight: 500; padding: 8px;
+  transition: 0.15s;
+}
+.type-btn.active { background: var(--sky-dim); border-color: var(--border2); color: var(--sky); }
+
+/* ── DATE IDEAS ── */
+.date-ideas { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.idea-result {
+  background: linear-gradient(135deg, var(--card2), var(--card));
+  border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 24px;
+  text-align: center; min-height: 120px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px;
+}
+.idea-emoji { font-size: 2.4rem; }
+.idea-text {
+  font-family: var(--font-d);
+  font-size: 1.2rem; font-style: italic;
+  color: var(--cream); line-height: 1.4;
+}
+.idea-tag {
+  font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--muted);
+  background: var(--sky-dim); border: 1px solid var(--border);
+  padding: 3px 10px; border-radius: 20px;
+}
+.idea-filter {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.filter-chip {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: 20px; color: var(--muted);
+  font-size: 0.75rem; font-weight: 500; padding: 6px 14px;
+  transition: 0.15s;
+}
+.filter-chip:hover { color: var(--cream); border-color: var(--border2); }
+.filter-chip.active {
+  background: var(--sky-dim); border-color: var(--border2); color: var(--sky);
+}
+.gen-btn {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(255,158,196,0.15), rgba(94,200,255,0.10));
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm); color: var(--cream);
+  font-size: 0.9rem; font-weight: 600; padding: 14px;
+  transition: 0.2s; margin-top: 10px;
+}
+.gen-btn:hover { background: linear-gradient(135deg, rgba(255,158,196,0.22), rgba(94,200,255,0.18)); transform: translateY(-1px); }
+
+/* ── CERITA KITA — timeline ala film reel, scene demi scene ── */
+.story-add-form {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 22px; padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.story-add-row { display: flex; gap: 8px; }
+.story-add-row .add-input { flex: 1; }
+.story-date-input { flex: 0 0 132px; color-scheme: dark; }
+.story-emoji-input { flex: 0 0 56px; text-align: center; }
+
+.timeline-wrap {
+  position: relative;
+  padding-left: 28px;
+}
+/* rel vertikal — garis film strip dengan sprocket holes kecil */
+.timeline-wrap::before {
+  content: '';
+  position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px;
+  background: repeating-linear-gradient(180deg, var(--border2) 0, var(--border2) 6px, transparent 6px, transparent 11px);
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: 26px;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.scene-marker {
+  position: absolute; left: -28px; top: 2px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--deep); border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; box-shadow: 0 0 0 4px var(--void), 0 0 14px -2px var(--gold-glow);
+}
+.scene-label {
+  font-family: var(--font-m); font-size: 0.6rem; letter-spacing: 0.1em;
+  color: var(--gold); text-transform: uppercase; opacity: 0.85;
+  margin-bottom: 4px; display: block;
+}
+.timeline-card {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 14px 16px;
+  transition: 0.25s var(--ease-soft);
+}
+.timeline-card:hover { border-color: var(--gold-glow); transform: translateX(2px); }
+.timeline-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.timeline-title {
+  font-family: var(--font-d); font-style: italic; font-weight: 600;
+  font-size: 1.05rem; color: var(--cream);
+}
+.timeline-title .emoji { font-style: normal; margin-right: 6px; }
+.timeline-date {
+  font-family: var(--font-m); font-size: 0.68rem; color: var(--muted);
+  white-space: nowrap; flex-shrink: 0;
+}
+.timeline-note { font-size: 0.82rem; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+.timeline-del {
+  background: none; border: none; color: var(--faint);
+  font-size: 0.68rem; padding: 2px 4px; margin-top: 8px;
+  transition: 0.15s; opacity: 0; float: right;
+}
+.timeline-card:hover .timeline-del { opacity: 1; }
+.timeline-del:hover { color: var(--pink); }
+.timeline-empty {
+  color: var(--faint); font-size: 0.85rem; text-align: center;
+  padding: 30px 10px; line-height: 1.7;
+}
+
+/* ── BUCKET LIST ── */
+.bucket-list { display: flex; flex-direction: column; gap: 6px; }
+.bucket-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 12px 14px;
+  transition: 0.2s; cursor: pointer;
+}
+.bucket-item:hover { border-color: var(--border2); }
+.bucket-item.done {
+  opacity: 0.5;
+  border-color: rgba(94,200,255,0.08);
+}
+.bucket-check {
+  width: 20px; height: 20px; flex-shrink: 0;
+  border: 2px solid var(--faint); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: 0.2s;
+  font-size: 0.7rem;
+}
+.bucket-item.done .bucket-check {
+  background: var(--sky); border-color: var(--sky); color: #050810;
+}
+.bucket-text {
+  flex: 1; font-size: 0.88rem;
+}
+.bucket-item.done .bucket-text { text-decoration: line-through; color: var(--faint); }
+.bucket-emoji { font-size: 1.1rem; flex-shrink: 0; }
+.bucket-del {
+  background: none; border: none; color: var(--faint);
+  font-size: 0.7rem; padding: 2px 4px; transition: 0.15s;
+}
+.bucket-del:hover { color: var(--pink); }
+.bucket-progress {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.bucket-bar-wrap { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+.bucket-bar-fill { height: 100%; background: linear-gradient(90deg, var(--pink), var(--sky)); border-radius: 2px; transition: width 0.5s ease; }
+.bucket-prog-label { font-family: var(--font-b); font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+
+/* ── SIAPA YANG SALAH ── */
+.salah-wrap { text-align: center; padding: 10px 0; }
+.salah-result {
+  font-family: var(--font-d);
+  font-size: 1.8rem; font-style: italic;
+  color: var(--cream); margin: 28px 0 10px;
+  min-height: 56px; transition: opacity 0.3s;
+}
+.salah-result .the-name { color: var(--pink); font-weight: 600; }
+.salah-btn {
+  background: linear-gradient(135deg, rgba(255,158,196,0.18), rgba(94,200,255,0.12));
+  border: 1px solid rgba(255,158,196,0.3);
+  border-radius: 30px; color: var(--cream);
+  font-size: 1rem; font-weight: 600;
+  padding: 14px 36px; transition: 0.2s;
+}
+.salah-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px -6px rgba(255,158,196,0.3); }
+.salah-note { font-size: 0.72rem; color: var(--faint); margin-top: 8px; }
+
+/* ── GALERI — "The Reel": gaya film strip, masonry + sprocket holes ── */
+.upload-area {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; padding: 30px 20px;
+  background: var(--sky-dim); border: 2px dashed rgba(94,200,255,0.3);
+  border-radius: var(--r); cursor: pointer; margin-bottom: 14px;
+  transition: 0.25s var(--ease-soft); text-align: center;
+}
+.upload-area:hover { background: var(--sky-glow); border-color: var(--gold-glow); transform: translateY(-1px); }
+.upload-area-icon { font-size: 2rem; }
+.upload-area-text { font-size: 0.9rem; font-weight: 600; color: var(--sky); }
+.upload-area-sub  { font-size: 0.72rem; color: var(--faint); }
+
+.storage-info {
+  font-size: 0.7rem; color: var(--faint);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+}
+.storage-bar-wrap { flex: 1; height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+.storage-bar-fill { height: 100%; background: linear-gradient(90deg, var(--sky), var(--pink)); border-radius: 2px; }
+.storage-info.warn { color: var(--pink); }
+
+.gallery-col-label {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint);
+}
+.clear-all-btn {
+  background: none; border: none; color: var(--faint);
+  font-size: 0.7rem; font-weight: 500; padding: 3px 8px;
+  border-radius: 6px; transition: 0.15s;
+}
+.clear-all-btn:hover { color: var(--pink); background: var(--pink-dim); }
+
+/* sprocket holes — dekorasi film strip di tepi galeri */
+.sprocket-strip {
+  display: flex; justify-content: space-between; padding: 0 4px;
+  margin-bottom: 10px; opacity: 0.5;
+}
+.sprocket-strip span {
+  width: 7px; height: 7px; border-radius: 2px;
+  background: var(--border2);
+}
+.sprocket-strip.bottom { margin-bottom: 0; margin-top: 10px; }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-auto-rows: 90px;
+  gap: 8px;
+}
+.gallery-item {
+  border-radius: var(--r-sm); overflow: hidden;
+  position: relative; background: var(--card2); border: 1px solid var(--border);
+  cursor: pointer; transition: 0.35s var(--ease-soft);
+  grid-row: span 2; /* default; di-randomize sedikit lewat JS untuk efek masonry */
+  opacity: 0; animation: gallery-item-in 0.5s var(--ease-soft) forwards;
+}
+@keyframes gallery-item-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.gallery-item.tall { grid-row: span 3; }
+.gallery-item.wide { grid-column: span 2; }
+.gallery-item:hover {
+  border-color: var(--gold-glow);
+  transform: scale(1.025);
+  box-shadow: 0 16px 36px -12px rgba(0,0,0,0.55);
+  z-index: 2;
+}
+.gallery-item img, .gallery-item video {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: 0.5s var(--ease-soft);
+  filter: saturate(0.92) brightness(0.96);
+}
+.gallery-item:hover img, .gallery-item:hover video {
+  filter: saturate(1.05) brightness(1.04);
+  transform: scale(1.06);
+}
+/* vignette spotlight saat hover — kesan "disorot" ala bioskop */
+.gallery-item::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.35) 100%);
+  opacity: 0; transition: opacity 0.35s;
+}
+.gallery-item:hover::after { opacity: 1; }
+.gallery-item .video-badge {
+  position: absolute; bottom: 6px; left: 6px; z-index: 2;
+  background: rgba(5,8,16,0.78); border-radius: 4px;
+  font-size: 0.6rem; padding: 2px 6px; color: var(--muted);
+  font-family: var(--font-m);
+}
+.gallery-item .del-media {
+  position: absolute; top: 5px; right: 5px; z-index: 2;
+  background: rgba(5,8,16,0.82); border: none; border-radius: 50%;
+  color: var(--pink); font-size: 0.7rem;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: 0.15s;
+}
+.gallery-item:hover .del-media { opacity: 1; }
+.gallery-empty {
+  text-align: center; padding: 40px 20px;
+  color: var(--faint); font-size: 0.85rem;
+  grid-column: 1/-1; line-height: 1.7;
+}
+.gallery-empty .big-icon { font-size: 2.8rem; margin-bottom: 10px; display: block; }
+
+/* ── NOTE HARIAN ── */
+.note-wrap { display: flex; flex-direction: column; gap: 12px; }
+.note-input {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); color: var(--cream);
+  padding: 14px; font-size: 0.9rem; line-height: 1.6;
+  resize: vertical; min-height: 100px; outline: none; transition: 0.18s; width: 100%;
+}
+.note-input:focus { border-color: var(--sky); }
+.note-input::placeholder { color: var(--faint); font-style: italic; }
+.note-from-row {
+  display: flex; gap: 8px; align-items: center;
+}
+.note-from-select {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); color: var(--cream);
+  padding: 9px 14px; font-size: 0.85rem; outline: none; transition: 0.18s;
+  flex: 1;
+}
+.note-from-select:focus { border-color: var(--sky); }
+.note-send-btn {
+  background: linear-gradient(135deg, var(--pink), #e91e8c);
+  border: none; border-radius: var(--r-sm);
+  color: #fff; font-weight: 600; font-size: 0.85rem;
+  padding: 10px 20px; transition: 0.2s;
+}
+.note-send-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px -4px rgba(255,158,196,0.4); }
+.notes-list { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.note-bubble {
+  padding: 14px 16px;
+  border-radius: var(--r-sm); position: relative;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.note-bubble.from-rizky {
+  background: linear-gradient(135deg, rgba(94,200,255,0.12), rgba(33,150,243,0.08));
+  border: 1px solid rgba(94,200,255,0.2);
+  align-self: flex-start; max-width: 90%;
+}
+.note-bubble.from-nadifa {
+  background: linear-gradient(135deg, rgba(255,158,196,0.12), rgba(233,30,140,0.06));
+  border: 1px solid rgba(255,158,196,0.2);
+  align-self: flex-end; max-width: 90%;
+}
+.note-meta {
+  font-size: 0.65rem; color: var(--faint); margin-bottom: 6px;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.note-sender { font-weight: 600; color: var(--muted); }
+.note-text { font-size: 0.88rem; line-height: 1.6; color: var(--cream); }
+.note-del {
+  background: none; border: none; color: var(--faint);
+  font-size: 0.65rem; padding: 0; transition: 0.15s;
+}
+.note-del:hover { color: var(--pink); }
+
+/* ── LIGHTBOX — "cinema screen": letterbox + grain + caption ala subtitle ── */
+.lightbox {
+  position: fixed; inset: 0; background: var(--void); z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; animation: lb-fade-in 0.32s var(--ease-soft);
+}
+@keyframes lb-fade-in {
+  from { opacity: 0; } to { opacity: 1; }
+}
+.lightbox img, .lightbox video {
+  max-width: 100%; max-height: 80vh; border-radius: 4px;
+  object-fit: contain;
+  box-shadow: 0 0 80px -10px rgba(94,200,255,0.15);
+  animation: lb-zoom-in 0.4s var(--ease-soft);
+}
+@keyframes lb-zoom-in {
+  from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; }
+}
+.lightbox-letterbox-top, .lightbox-letterbox-bottom {
+  position: fixed; left: 0; right: 0; height: 14vh; z-index: 199;
+  background: var(--void); pointer-events: none;
+}
+.lightbox-letterbox-top { top: 0; border-bottom: 1px solid var(--gold-glow); }
+.lightbox-letterbox-bottom { bottom: 0; border-top: 1px solid var(--gold-glow); }
+.lightbox-caption {
+  position: fixed; bottom: calc(14vh + 18px); left: 0; right: 0;
+  text-align: center; font-family: var(--font-m); font-size: 0.7rem;
+  letter-spacing: 0.08em; color: var(--gold); opacity: 0.85; z-index: 201;
+}
+.lightbox-close {
+  position: fixed; top: 16px; right: 16px; z-index: 201;
+  background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--cream); width: 40px; height: 40px;
+  font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+  transition: 0.2s;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.12); border-color: var(--gold-glow); transform: rotate(90deg); }
+
+/* ── CONFETTI HEARTS ── */
+.heart-particle {
+  position: fixed; pointer-events: none; z-index: 100;
+  font-size: 1.2rem; animation: floatHeart 1.4s ease forwards;
+}
+@keyframes floatHeart {
+  0%   { opacity:1; transform:translateY(0) scale(1); }
+  100% { opacity:0; transform:translateY(-120px) scale(0.5); }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 480px) {
+  .hero-title { font-size: 2.5rem; }
+}
+
+/* ════════════════════════════════════════════════════════
+   PER-HALAMAN THEME OVERRIDES
+   Tiap section punya skema warnanya sendiri (scoped via id),
+   variabel CSS global di-override di dalam masing-masing
+   section sehingga semua elemen yang sudah pakai var(--xxx)
+   otomatis ikut tema baru tanpa mengubah strukturnya.
+   ════════════════════════════════════════════════════════ */
+
+/* ── 1. BERANDA → AVENGERS: ENDGAME ──
+   Palet diambil dari nuansa Endgame: ungu Infinity Gauntlet,
+   merah Iron Man/Cap, dan emas Nano Gauntlet sebagai aksen. */
+#beranda {
+  --void: #05050A; --night: #0A0814; --deep: #1A0E2E; --ocean: #2B0A0A;
+  --card: #15101F; --card2: #1D1530;
+  --border: rgba(255,184,28,0.16); --border2: rgba(255,184,28,0.34);
+  --sky: #FFB81C; --sky-dim: rgba(255,184,28,0.10); --sky-glow: rgba(255,184,28,0.28);
+  --pink: #E0263C; --pink-dim: rgba(224,38,60,0.14);
+  --gold: #FFD700; --gold-dim: rgba(255,215,0,0.16); --gold-glow: rgba(255,215,0,0.4);
+  --cream: #F3E9D8; --muted: #9A8BBF; --faint: #4A3B66;
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,184,28,0.08), transparent 60%),
+              radial-gradient(ellipse 70% 50% at 85% 10%, rgba(224,38,60,0.08), transparent 55%),
+              linear-gradient(180deg, #0A0814 0%, #05050A 60%, #020103 100%);
+}
+#beranda .hero-eyebrow::before, #beranda .hero-eyebrow::after { background: var(--gold); }
+#beranda .salah-btn { background: linear-gradient(135deg, rgba(255,184,28,0.22), rgba(224,38,60,0.22)); border-color: rgba(255,184,28,0.4); }
+
+/* ── 2. SPIN → EJEN ALI ──
+   Navy biru seragam MATA, kuning lambang, merah sarung tangan. */
+#spin {
+  --void: #020B1A; --night: #041632; --deep: #072354; --ocean: #0A2C66;
+  --card: #0A2C66; --card2: #0D3680;
+  --border: rgba(255,209,0,0.18); --border2: rgba(255,209,0,0.38);
+  --sky: #FFD100; --sky-dim: rgba(255,209,0,0.12); --sky-glow: rgba(255,209,0,0.3);
+  --pink: #E63946; --pink-dim: rgba(230,57,70,0.14);
+  --gold: #FFD100; --gold-dim: rgba(255,209,0,0.16); --gold-glow: rgba(255,209,0,0.4);
+  --cream: #EAF4FF; --muted: #7FA8D9; --faint: #2F5483;
+}
+#spin .spin-btn { background: linear-gradient(135deg, #FFD100, #E63946); color: #021430; box-shadow: 0 4px 20px -4px rgba(255,209,0,0.4); }
+
+/* ── 3. KENCAN → BARBIE ──
+   Hot pink glam dengan aksen emas. */
+#kencan {
+  --void: #1A0512; --night: #2B0A1F; --deep: #4A0F33; --ocean: #5C1240;
+  --card: #5C1240; --card2: #6B1648;
+  --border: rgba(255,105,180,0.22); --border2: rgba(255,215,0,0.36);
+  --sky: #FF6FB5; --sky-dim: rgba(255,111,181,0.14); --sky-glow: rgba(255,111,181,0.3);
+  --pink: #FF1493; --pink-dim: rgba(255,20,147,0.16);
+  --gold: #FFD700; --gold-dim: rgba(255,215,0,0.16); --gold-glow: rgba(255,215,0,0.4);
+  --cream: #FFF0F7; --muted: #E2A8C8; --faint: #7A2E54;
+}
+#kencan .gen-btn { background: linear-gradient(135deg, rgba(255,20,147,0.28), rgba(255,215,0,0.2)); border-color: rgba(255,215,0,0.4); }
+#kencan .gen-btn:hover { background: linear-gradient(135deg, rgba(255,20,147,0.4), rgba(255,215,0,0.3)); }
+
+/* ── 4. CERITA KITA → UPIN & IPIN ──
+   Kuning kampung + hijau songkok + coklat hangat. */
+#cerita {
+  --void: #1B1206; --night: #2A1B0A; --deep: #3D2A10; --ocean: #46300F;
+  --card: #46300F; --card2: #523813;
+  --border: rgba(255,193,7,0.22); --border2: rgba(76,175,80,0.32);
+  --sky: #FFC107; --sky-dim: rgba(255,193,7,0.14); --sky-glow: rgba(255,193,7,0.3);
+  --pink: #4CAF50; --pink-dim: rgba(76,175,80,0.14);
+  --gold: #FF8F00; --gold-dim: rgba(255,143,0,0.16); --gold-glow: rgba(255,143,0,0.4);
+  --cream: #FFF8E1; --muted: #C9A66B; --faint: #6B4A1E;
+}
+
+/* ── 5. BUCKET LIST → ONE PIECE ──
+   Biru lautan + kuning topi jerami + merah rompi Luffy. */
+#bucket {
+  --void: #020B14; --night: #03101F; --deep: #052038; --ocean: #073050;
+  --card: #073050; --card2: #0A3D63;
+  --border: rgba(255,193,7,0.2); --border2: rgba(255,87,34,0.32);
+  --sky: #FFC107; --sky-dim: rgba(255,193,7,0.12); --sky-glow: rgba(255,193,7,0.3);
+  --pink: #FF5722; --pink-dim: rgba(255,87,34,0.16);
+  --gold: #FFC107; --gold-dim: rgba(255,193,7,0.16); --gold-glow: rgba(255,193,7,0.4);
+  --cream: #E8F6FF; --muted: #6FA8C9; --faint: #214A63;
+}
+#bucket .bucket-bar-fill { background: linear-gradient(90deg, #FF5722, #FFC107); }
+
+/* ── 6. GALERI → CERIA TAPI ROMANTIS ──
+   Pink cerah + ungu lembut + kuning matahari, tetap manis. */
+#galeri {
+  --void: #1A0A22; --night: #2B1033; --deep: #3D1548; --ocean: #481A58;
+  --card: #481A58; --card2: #552064;
+  --border: rgba(255,158,196,0.22); --border2: rgba(186,104,255,0.34);
+  --sky: #FF9EC4; --sky-dim: rgba(255,158,196,0.14); --sky-glow: rgba(255,158,196,0.3);
+  --pink: #FFD23F; --pink-dim: rgba(255,210,63,0.16);
+  --gold: #BA68FF; --gold-dim: rgba(186,104,255,0.16); --gold-glow: rgba(186,104,255,0.4);
+  --cream: #FFF0FA; --muted: #D9A0D0; --faint: #6B2E72;
+}
+#galeri .upload-area { background: rgba(255,158,196,0.1); border-color: rgba(186,104,255,0.35); }
+#galeri .storage-bar-fill { background: linear-gradient(90deg, #FF9EC4, #BA68FF); }
+
+/* ── 7. NOTE → CARS 3 ──
+   Merah balap + chrome abu + hitam aspal. */
+#note {
+  --void: #0A0A0C; --night: #121214; --deep: #1C1C1F; --ocean: #222226;
+  --card: #222226; --card2: #2A2A2F;
+  --border: rgba(220,20,20,0.22); --border2: rgba(192,192,192,0.3);
+  --sky: #E10600; --sky-dim: rgba(225,6,0,0.14); --sky-glow: rgba(225,6,0,0.3);
+  --pink: #C0C0C0; --pink-dim: rgba(192,192,192,0.14);
+  --gold: #E10600; --gold-dim: rgba(225,6,0,0.16); --gold-glow: rgba(225,6,0,0.4);
+  --cream: #F2F2F2; --muted: #9A9A9E; --faint: #4A4A4E;
+}
+#note .note-send-btn { background: linear-gradient(135deg, #E10600, #8B0000); }
+#note .note-bubble.from-rizky { background: linear-gradient(135deg, rgba(225,6,0,0.16), rgba(139,0,0,0.08)); border: 1px solid rgba(225,6,0,0.28); }
+#note .note-bubble.from-nadifa { background: linear-gradient(135deg, rgba(192,192,192,0.16), rgba(120,120,120,0.08)); border: 1px solid rgba(192,192,192,0.3); }
+
+@media (max-width: 480px) {
+  .cd-val { font-size: 1.8rem; }
+  .cd-unit { padding: 12px 14px; min-width: 58px; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  nav { padding: 0 12px; }
+  .nav-brand { font-size: 0.95rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="letterbox-top"></div>
+<div class="letterbox-bottom"></div>
+<div id="light-leak"></div>
+<div id="grain-overlay"></div>
+<canvas id="stars-canvas"></canvas>
+
+<!-- SCENE BACKGROUND CANVAS — switches per tab -->
+<canvas id="scene-canvas" style="position:fixed;inset:0;z-index:2;pointer-events:none;"></canvas>
+<div id="scene-svg-layer" style="position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;"></div>
+<style>
+#tab-flash { position:fixed;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity 0.12s ease; }
+#tab-flash.show { opacity:1; }
+#scene-svg-layer { overflow:hidden; z-index:2; }
+@keyframes scene-portal-spin { from{transform:translateY(-50%) rotate(0deg);} to{transform:translateY(-50%) rotate(360deg);} }
+@keyframes scene-jet-fly { 0%{left:-200px;} 100%{left:calc(100% + 200px);} }
+@keyframes scene-drone-hover { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-14px);} }
+@keyframes scene-ship-bob { 0%,100%{transform:translateY(0px) rotate(0deg);} 50%{transform:translateY(-8px) rotate(1.5deg);} }
+</style>
+<div id="tab-flash" style="z-index:10;"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Rizky <span>&</span> Nadifa</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-tab="beranda">🛡️ Beranda</button>
+    <button class="nav-tab" data-tab="spin">🕵️ Spin</button>
+    <button class="nav-tab" data-tab="kencan">👛 Kencan</button>
+    <button class="nav-tab" data-tab="cerita">🧡 Cerita Kita</button>
+    <button class="nav-tab" data-tab="bucket">🏴‍☠️ Bucket List</button>
+    <button class="nav-tab" data-tab="galeri">🌸 Galeri</button>
+    <button class="nav-tab" data-tab="note">🏎️ Note</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ── BERANDA ── -->
+<div id="beranda" class="section active">
+  <div class="hero">
+    <div class="hero-eyebrow"><span class="rec-dot"></span> Whatever it takes — sejak 10 Januari 2026</div>
+    <h1 class="hero-title">Rizky <span class="amp">&</span> Nadifa</h1>
+    <p class="hero-sub">Part of the journey is the end 🌌 — tapi kisah kita baru mulai</p>
+    <div class="timecode-label">Endgame timer — waktu bersama</div>
+    <div class="countdown-wrap">
+      <div class="countdown">
+        <div class="cd-unit"><span class="cd-val" id="cd-hari">0</span><span class="cd-lbl">Hari</span></div>
+        <div class="cd-unit"><span class="cd-val" id="cd-jam">0</span><span class="cd-lbl">Jam</span></div>
+        <div class="cd-unit"><span class="cd-val" id="cd-menit">0</span><span class="cd-lbl">Menit</span></div>
+        <div class="cd-unit"><span class="cd-val" id="cd-detik">0</span><span class="cd-lbl">Detik</span></div>
+      </div>
+    </div>
+    <div class="since-label">bersama sejak <strong>10 Januari 2026</strong> 💛</div>
+    <div class="hero-heart" style="margin-top:28px;">🧡</div>
+  </div>
+
+  <!-- Siapa yang salah hari ini -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-icon">🧤</span>
+      <div>
+        <div class="card-title">Siapa yang Kena Snap Hari Ini?</div>
+        <div class="card-sub">Buat becandaan — jangan baper ya 😄</div>
+      </div>
+    </div>
+    <div class="salah-wrap">
+      <div class="salah-result" id="salah-result">Tekan tombol untuk tahu siapa yang salah...</div>
+      <button class="salah-btn" id="salah-btn">🧤 Assemble & Tentukan!</button>
+      <div class="salah-note">*Ini hanya untuk becandaan 100% tidak serius</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SPIN WHEEL ── -->
+<div id="spin" class="section">
+  <div class="card" style="margin-top:24px;">
+    <div class="card-head">
+      <span class="card-icon">🕵️</span>
+      <div>
+        <div class="card-title">Roda MATA Ejen Ali</div>
+        <div class="card-sub">Putar roda, biar Ejen Ali yang nyelesaiin misi keputusan!</div>
+      </div>
+    </div>
+    <div class="wheel-type-row">
+      <button class="type-btn active" data-wheel="bayar">💳 Siapa yang Bayar</button>
+      <button class="type-btn" data-wheel="makan">🍜 Makan Apa</button>
+      <button class="type-btn" data-wheel="custom">✏️ Custom</button>
+    </div>
+    <div class="wheel-wrap">
+      <canvas id="wheel-canvas" width="280" height="280"></canvas>
+      <div class="wheel-result" id="wheel-result"></div>
+      <button class="spin-btn" id="spin-btn">Misi: Putar Roda!</button>
+    </div>
+    <div class="wheel-items" id="wheel-items-wrap" style="margin-top:18px; display:none;">
+      <div class="wheel-items-label">Item Roda (Custom)</div>
+      <div class="wheel-tags" id="wheel-tags"></div>
+      <div class="add-item-row">
+        <input class="add-input" id="wheel-add-input" placeholder="Tambah item..." maxlength="20">
+        <button class="add-btn" id="wheel-add-btn">+ Tambah</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── IDE KENCAN ── -->
+<div id="kencan" class="section">
+  <div class="card" style="margin-top:24px;">
+    <div class="card-head">
+      <span class="card-icon">👛</span>
+      <div>
+        <div class="card-title">Barbie's Date Night Idea</div>
+        <div class="card-sub">Bingung mau ngapain? Biarkan keberuntungan ala Barbie yang milih!</div>
+      </div>
+    </div>
+    <div class="idea-filter">
+      <button class="filter-chip active" data-cat="semua">Semua</button>
+      <button class="filter-chip" data-cat="rumah">🏠 Di Rumah</button>
+      <button class="filter-chip" data-cat="keluar">🌆 Keluar</button>
+      <button class="filter-chip" data-cat="murah">💸 Budget Hemat</button>
+      <button class="filter-chip" data-cat="special">✨ Spesial</button>
+    </div>
+    <div class="idea-result" id="idea-result">
+      <span class="idea-emoji">💭</span>
+      <div class="idea-text">Tekan tombol untuk dapat ide kencan!</div>
+    </div>
+    <button class="gen-btn" id="gen-idea-btn">💖 Generate Ide Kencan ala Barbie!</button>
+  </div>
+</div>
+
+<!-- ── CERITA KITA ── -->
+<div id="cerita" class="section">
+  <div class="card" style="margin-top:24px;">
+    <div class="card-head">
+      <span class="card-icon">🧡</span>
+      <div>
+        <div class="card-title">Cerita Kita, Betul Betul Betul!</div>
+        <div class="card-sub">Momen-momen yang bikin kalian sampai di sini 🧡</div>
+      </div>
+    </div>
+
+    <div class="story-add-form">
+      <div class="story-add-row">
+        <input type="date" class="add-input story-date-input" id="story-date-input">
+        <input type="text" class="add-input" id="story-title-input" placeholder="Nama momennya..." maxlength="40">
+      </div>
+      <div class="story-add-row">
+        <input type="text" class="add-input story-emoji-input" id="story-emoji-input" placeholder="🧡" maxlength="2">
+        <input type="text" class="add-input" id="story-note-input" placeholder="Cerita singkat (opsional)" maxlength="80">
+        <button class="add-btn" id="story-add-btn">+ Simpan</button>
+      </div>
+    </div>
+
+    <div class="timeline-wrap" id="story-wrap"></div>
+  </div>
+</div>
+
+<!-- ── BUCKET LIST ── -->
+<div id="bucket" class="section">
+  <div class="card" style="margin-top:24px;">
+    <div class="card-head">
+      <span class="card-icon">🏴‍☠️</span>
+      <div>
+        <div class="card-title">Bucket List: Grand Line Berdua</div>
+        <div class="card-sub">Mimpi-mimpi yang mau kalian wujudkan, jadi Pirate King bareng 🌟</div>
+      </div>
+    </div>
+    <div class="bucket-progress">
+      <div class="bucket-bar-wrap"><div class="bucket-bar-fill" id="bucket-bar"></div></div>
+      <div class="bucket-prog-label" id="bucket-prog-label">0 / 0 selesai</div>
+    </div>
+    <div class="bucket-list" id="bucket-list"></div>
+    <div class="add-item-row" style="margin-top:14px;">
+      <input class="add-input" id="bucket-add-input" placeholder="Tambah impian baru..." maxlength="60">
+      <button class="add-btn" id="bucket-add-btn">+ Tambah</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── GALERI ── -->
+<div id="galeri" class="section">
+  <div class="card" style="margin-top:24px;">
+    <div class="card-head">
+      <span class="card-icon">🌸</span>
+      <div>
+        <div class="card-title">Galeri Manis Kita</div>
+        <div class="card-sub">Upload foto & video langsung — tersimpan permanen di cloud ☁️🌸</div>
+      </div>
+    </div>
+
+    <!-- Upload area -->
+    <label class="upload-area" id="upload-area" style="cursor:pointer;">
+      <input type="file" accept="image/*,video/*" multiple id="file-upload" style="display:none">
+      <span class="upload-area-icon" id="upload-icon">📁</span>
+      <span class="upload-area-text" id="upload-text">Tap untuk pilih foto atau video</span>
+      <span class="upload-area-sub" id="upload-sub">JPG, PNG, MP4 dll · Langsung tersimpan permanen ☁️</span>
+    </label>
+
+    <!-- Progress -->
+    <div id="upload-progress-wrap" style="display:none; margin-top:12px;">
+      <div style="height:6px; background:rgba(94,200,255,0.1); border-radius:10px; overflow:hidden;">
+        <div id="upload-progress-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#FF9EC4,#BA68FF); border-radius:10px; transition:width 0.3s;"></div>
+      </div>
+      <div id="upload-progress-label" style="font-size:0.72rem; color:var(--muted); margin-top:5px; text-align:center;"></div>
+    </div>
+
+    <!-- Info -->
+    <div class="storage-info" id="storage-info" style="margin-top:10px;font-size:0.73rem;color:var(--muted);text-align:center;"></div>
+
+    <!-- Col label -->
+    <div class="gallery-col-label" id="gallery-col-label" style="display:none;">
+      <span id="gallery-count-label"></span>
+      <button class="clear-all-btn" id="clear-all-btn">🗑 Hapus Semua</button>
+    </div>
+
+    <div class="sprocket-strip" id="sprocket-top"></div>
+
+    <!-- Grid -->
+    <div class="gallery-grid" id="gallery-grid">
+      <div class="gallery-empty">
+        <span class="big-icon">📷</span>
+        <div>Belum ada foto.</div>
+        <div style="margin-top:4px;font-size:0.75rem;">Tap tombol di atas untuk mulai tambahkan momen kalian!</div>
+      </div>
+    </div>
+
+    <div class="sprocket-strip bottom" id="sprocket-bottom"></div>
+  </div>
+</div>
+
+<!-- ── NOTE HARIAN ── -->
+<div id="note" class="section">
+  <div class="card" style="margin-top:24px;">
+    <div class="card-head">
+      <span class="card-icon">🏎️</span>
+      <div>
+        <div class="card-title">Pit Stop Notes</div>
+        <div class="card-sub">Pesan kecil untuk satu sama lain, ngebut sampai garis finish 🏁</div>
+      </div>
+    </div>
+    <div class="note-wrap">
+      <select class="note-from-select" id="note-from">
+        <option value="Rizky">🏎️ Dari Rizky</option>
+        <option value="Nadifa">🏁 Dari Nadifa</option>
+      </select>
+      <textarea class="note-input" id="note-input" placeholder="Tulis pesan hangat untuk dia..."></textarea>
+      <button class="note-send-btn" id="note-send-btn">Kirim Note 🏁</button>
+    </div>
+    <div style="margin-top:20px; margin-bottom:12px; font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--faint);">Pesan Tersimpan</div>
+    <div class="notes-list" id="notes-list"></div>
+  </div>
+</div>
+
+</main>
+
+<script type="module">
+// ── PER-TAB CINEMATIC SCENE SYSTEM ──
+const SCENES = {
+  beranda: {
+    // Avengers Endgame — explosions, portal, warriors, aircraft
+    bg: (w,h) => `radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,184,28,0.09) 0%, transparent 60%),
+                   radial-gradient(ellipse 60% 40% at 85% 10%, rgba(224,38,60,0.09) 0%, transparent 55%),
+                   linear-gradient(180deg, #0A0814 0%, #05050A 60%, #020103 100%)`,
+    flashColor: 'rgba(255,150,0,0.18)',
+    svg: () => `
+      <!-- Portal Ring -->
+      <div style="position:absolute;right:-40px;top:50%;transform:translateY(-50%);width:300px;height:300px;opacity:0.5;animation:scene-portal-spin 18s linear infinite;">
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" width="300" height="300">
+          <defs>
+            <radialGradient id="pg1" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FF8800" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#FF2200" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="pblur"><feGaussianBlur stdDeviation="3"/></filter>
+          </defs>
+          <circle cx="150" cy="150" r="136" fill="none" stroke="#FF6600" stroke-width="3" stroke-dasharray="18 8" opacity="0.9"/>
+          <circle cx="150" cy="150" r="124" fill="none" stroke="#FFAA00" stroke-width="1.5" stroke-dasharray="6 14" opacity="0.7"/>
+          <circle cx="150" cy="150" r="110" fill="url(#pg1)" filter="url(#pblur)"/>
+          <circle cx="150" cy="14" r="3" fill="#FFDD00"><animate attributeName="opacity" values="1;0.2;1" dur="0.8s" repeatCount="indefinite"/></circle>
+          <circle cx="270" cy="78" r="2.5" fill="#FF8800"><animate attributeName="opacity" values="0.2;1;0.2" dur="1.1s" repeatCount="indefinite"/></circle>
+          <circle cx="286" cy="186" r="3" fill="#FF4400"><animate attributeName="opacity" values="1;0;1" dur="0.6s" repeatCount="indefinite"/></circle>
+          <circle cx="70" cy="278" r="2.5" fill="#FF6600"><animate attributeName="opacity" values="1;0.3;1" dur="1.3s" repeatCount="indefinite"/></circle>
+          <circle cx="16" cy="175" r="2.5" fill="#FFDD00"><animate attributeName="opacity" values="0.5;1;0.5" dur="0.7s" repeatCount="indefinite"/></circle>
+        </svg>
+      </div>
+      <!-- Warriors ground -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:85px;overflow:hidden;">
+        <svg viewBox="0 0 1200 85" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" width="100%" height="100%">
+          <defs>
+            <linearGradient id="gFog" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#05050A" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#05050A" stop-opacity="1"/>
+            </linearGradient>
+            <filter id="sGlow"><feDropShadow dx="0" dy="-4" stdDeviation="5" flood-color="#FFB81C" flood-opacity="0.5"/></filter>
+          </defs>
+          <rect x="0" y="40" width="1200" height="45" fill="url(#gFog)"/>
+          <g fill="#0A0510" filter="url(#sGlow)" opacity="0.8">
+            <animateTransform attributeName="transform" type="translate" from="-60 0" to="30 0" dur="32s" repeatCount="indefinite"/>
+            <rect x="60" y="49" width="11" height="22" rx="2"/><circle cx="65" cy="45" r="7"/>
+            <path d="M60 56 Q50 64 46 72" stroke="#0A0510" stroke-width="3" fill="none"/>
+            <rect x="120" y="51" width="10" height="21" rx="2"/><circle cx="125" cy="47" r="6"/>
+            <line x1="130" y1="50" x2="145" y2="30" stroke="#0A0510" stroke-width="2.5"/>
+            <polygon points="145,30 142,24 148,27" fill="#0A0510"/>
+            <rect x="185" y="50" width="11" height="22" rx="2"/><circle cx="190" cy="46" r="6.5"/>
+            <rect x="247" y="48" width="12" height="24" rx="2"/><circle cx="253" cy="44" r="8"/>
+            <rect x="235" y="49" width="9" height="17" rx="3"/>
+            <rect x="310" y="52" width="10" height="21" rx="2"/><circle cx="315" cy="48" r="5.5"/>
+            <rect x="370" y="51" width="11" height="22" rx="2"/><circle cx="375" cy="47" r="6"/>
+            <path d="M370 63 L360 73" stroke="#0A0510" stroke-width="3" fill="none"/>
+            <path d="M381 63 L390 73" stroke="#0A0510" stroke-width="3" fill="none"/>
+            <rect x="430" y="55" width="8" height="18" rx="1.5" opacity="0.6"/><circle cx="434" cy="51" r="5" opacity="0.6"/>
+            <rect x="470" y="57" width="7" height="16" rx="1.5" opacity="0.5"/><circle cx="473" cy="53" r="4.5" opacity="0.5"/>
+            <rect x="510" y="57" width="7" height="16" rx="1.5" opacity="0.5"/><circle cx="513" cy="53" r="4.5" opacity="0.5"/>
+            <rect x="548" y="59" width="6" height="14" rx="1.5" opacity="0.4"/><circle cx="551" cy="55" r="4" opacity="0.4"/>
+          </g>
+        </svg>
+      </div>
+      <!-- Quinjet aircraft -->
+      <div style="position:absolute;top:15%;left:-200px;animation:scene-jet-fly 26s linear infinite 1s;">
+        <svg viewBox="0 0 180 60" xmlns="http://www.w3.org/2000/svg" width="170" height="55" opacity="0.5">
+          <defs>
+            <filter id="jGlow"><feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#5EC8FF" flood-opacity="0.8"/></filter>
+            <linearGradient id="exG" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#5EC8FF" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#5EC8FF" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M 0 30 Q 30 30 60 30" stroke="url(#exG)" stroke-width="8" fill="none" opacity="0.5">
+            <animate attributeName="stroke-width" values="8;13;7;11;8" dur="0.8s" repeatCount="indefinite"/>
+          </path>
+          <path d="M 60 25 L 160 27 L 175 30 L 160 33 L 60 35 Z" fill="#0D1B3E" filter="url(#jGlow)"/>
+          <ellipse cx="155" cy="30" rx="16" ry="9" fill="#1a2d5a" filter="url(#jGlow)"/>
+          <ellipse cx="157" cy="29" rx="7" ry="4.5" fill="#5EC8FF" opacity="0.25"/>
+          <path d="M 110 27 L 95 8 L 130 25 Z" fill="#0D1B3E" filter="url(#jGlow)"/>
+          <path d="M 110 33 L 95 52 L 130 35 Z" fill="#0D1B3E" filter="url(#jGlow)"/>
+          <circle cx="100" cy="14" r="4" fill="#5EC8FF" opacity="0.6"><animate attributeName="r" values="4;5.5;4" dur="0.5s" repeatCount="indefinite"/></circle>
+          <circle cx="100" cy="46" r="4" fill="#5EC8FF" opacity="0.6"><animate attributeName="r" values="4;5.5;4" dur="0.7s" repeatCount="indefinite"/></circle>
+        </svg>
+      </div>
+      <!-- Energy beams -->
+      <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bm1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#FF6600" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#FF8800" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#FF4400" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="bm2" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5EC8FF" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#5EC8FF" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#5EC8FF" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <line x1="80" y1="0" x2="20" y2="100" stroke="url(#bm1)" stroke-width="0.8">
+          <animate attributeName="opacity" values="0;0.7;0;0.5;0" dur="4s" repeatCount="indefinite"/>
+        </line>
+        <line x1="10" y1="0" x2="70" y2="100" stroke="url(#bm2)" stroke-width="0.6">
+          <animate attributeName="opacity" values="0;0.5;0;0.3;0" dur="5s" begin="2s" repeatCount="indefinite"/>
+        </line>
+      </svg>`,
+    drawFn: drawEndgame
+  },
+  spin: {
+    // Ejen Ali — futuristic city, drones, hologram grid
+    bg: (w,h) => `radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,209,0,0.08) 0%, transparent 55%),
+                   linear-gradient(180deg, #041632 0%, #020B1A 60%, #010814 100%)`,
+    flashColor: 'rgba(255,209,0,0.2)',
+    svg: () => `
+      <!-- City skyline silhouette -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:200px;overflow:hidden;">
+        <svg viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" width="100%" height="100%">
+          <defs>
+            <linearGradient id="cityFog" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#020B1A" stop-opacity="0"/>
+              <stop offset="80%" stop-color="#020B1A" stop-opacity="0.9"/>
+            </linearGradient>
+            <filter id="cityGlow"><feDropShadow dx="0" dy="-2" stdDeviation="4" flood-color="#FFD100" flood-opacity="0.4"/></filter>
+          </defs>
+          <!-- City buildings -->
+          <g fill="#041020" filter="url(#cityGlow)" opacity="0.9">
+            <rect x="0" y="80" width="60" height="120"/>
+            <rect x="10" y="50" width="20" height="150"/>
+            <rect x="55" y="100" width="45" height="100"/>
+            <rect x="90" y="60" width="30" height="140"/>
+            <rect x="115" y="40" width="18" height="160"/><!-- tall spire -->
+            <rect x="128" y="90" width="40" height="110"/>
+            <rect x="162" y="70" width="25" height="130"/>
+            <rect x="185" y="30" width="22" height="170"/>
+            <rect x="200" y="110" width="50" height="90"/>
+            <rect x="248" y="55" width="35" height="145"/>
+            <rect x="280" y="80" width="28" height="120"/>
+            <rect x="305" y="20" width="15" height="180"/><!-- comm tower -->
+            <rect x="315" y="90" width="55" height="110"/>
+            <rect x="365" y="65" width="30" height="135"/>
+            <rect x="390" y="40" width="20" height="160"/>
+            <rect x="408" y="100" width="45" height="100"/>
+            <rect x="450" y="70" width="60" height="130"/>
+            <rect x="508" y="50" width="25" height="150"/>
+            <rect x="530" y="85" width="40" height="115"/>
+            <rect x="568" y="35" width="18" height="165"/>
+            <rect x="582" y="95" width="55" height="105"/>
+            <rect x="635" y="60" width="30" height="140"/>
+            <rect x="662" y="80" width="48" height="120"/>
+            <rect x="708" y="45" width="22" height="155"/>
+            <rect x="726" y="90" width="38" height="110"/>
+            <rect x="762" y="25" width="14" height="175"/>
+            <rect x="772" y="100" width="52" height="100"/>
+            <rect x="822" y="65" width="28" height="135"/>
+            <rect x="848" y="42" width="20" height="158"/>
+            <rect x="865" y="88" width="45" height="112"/>
+            <rect x="908" y="58" width="35" height="142"/>
+            <rect x="940" y="30" width="16" height="170"/>
+            <rect x="954" y="95" width="50" height="105"/>
+            <rect x="1002" y="72" width="30" height="128"/>
+            <rect x="1030" y="48" width="22" height="152"/>
+            <rect x="1050" y="88" width="45" height="112"/>
+            <rect x="1090" y="60" width="28" height="140"/>
+            <rect x="1115" y="22" width="16" height="178"/>
+            <rect x="1128" y="92" width="72" height="108"/>
+          </g>
+          <!-- Window lights -->
+          <g opacity="0.6">
+            <rect x="12" y="55" width="3" height="2" fill="#FFD100"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/></rect>
+            <rect x="18" y="62" width="3" height="2" fill="#FFD100"><animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/></rect>
+            <rect x="118" y="45" width="3" height="2" fill="#FFD100"><animate attributeName="opacity" values="1;0.2;1" dur="1.2s" repeatCount="indefinite"/></rect>
+            <rect x="188" y="38" width="3" height="2" fill="#FFD100"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.8s" repeatCount="indefinite"/></rect>
+            <rect x="310" y="28" width="2" height="2" fill="#E63946"><animate attributeName="opacity" values="1;0;1" dur="0.9s" repeatCount="indefinite"/></rect><!-- antenna blink -->
+            <rect x="768" y="30" width="2" height="2" fill="#E63946"><animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite"/></rect>
+            <rect x="940" y="35" width="2" height="2" fill="#E63946"><animate attributeName="opacity" values="0;1;0" dur="0.8s" repeatCount="indefinite"/></rect>
+            <rect x="1118" y="27" width="2" height="2" fill="#E63946"><animate attributeName="opacity" values="1;0;1" dur="1.3s" repeatCount="indefinite"/></rect>
+          </g>
+          <rect x="0" y="0" width="1200" height="200" fill="url(#cityFog)"/>
+        </svg>
+      </div>
+      <!-- Hologram grid -->
+      <svg style="position:absolute;inset:0;width:100%;height:60%;opacity:0.12;" viewBox="0 0 100 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><pattern id="hgrid" width="10" height="10" patternUnits="userSpaceOnUse">
+          <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#FFD100" stroke-width="0.3"/>
+        </pattern></defs>
+        <rect width="100" height="60" fill="url(#hgrid)"/>
+      </svg>
+      <!-- Drone -->
+      <div style="position:absolute;top:20%;right:10%;animation:scene-drone-hover 3s ease-in-out infinite;">
+        <svg viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg" width="80" height="40" opacity="0.55">
+          <ellipse cx="40" cy="20" rx="18" ry="8" fill="#041020"/>
+          <circle cx="40" cy="20" r="6" fill="#FFD100" opacity="0.7"/>
+          <circle cx="15" cy="10" r="10" fill="none" stroke="#FFD100" stroke-width="1.5" opacity="0.5"><animate attributeName="r" values="10;11;10" dur="0.3s" repeatCount="indefinite"/></circle>
+          <circle cx="65" cy="10" r="10" fill="none" stroke="#FFD100" stroke-width="1.5" opacity="0.5"><animate attributeName="r" values="10;11;10" dur="0.3s" repeatCount="indefinite"/></circle>
+          <circle cx="15" cy="30" r="10" fill="none" stroke="#FFD100" stroke-width="1.5" opacity="0.5"><animate attributeName="r" values="10;11;10" dur="0.3s" repeatCount="indefinite"/></circle>
+          <circle cx="65" cy="30" r="10" fill="none" stroke="#FFD100" stroke-width="1.5" opacity="0.5"><animate attributeName="r" values="10;11;10" dur="0.3s" repeatCount="indefinite"/></circle>
+          <line x1="22" y1="14" x2="32" y2="17" stroke="#FFD100" stroke-width="1" opacity="0.6"/>
+          <line x1="58" y1="14" x2="48" y2="17" stroke="#FFD100" stroke-width="1" opacity="0.6"/>
+          <line x1="22" y1="26" x2="32" y2="23" stroke="#FFD100" stroke-width="1" opacity="0.6"/>
+          <line x1="58" y1="26" x2="48" y2="23" stroke="#FFD100" stroke-width="1" opacity="0.6"/>
+          <!-- Scan beam -->
+          <line x1="40" y1="28" x2="40" y2="60" stroke="#FFD100" stroke-width="1.5" opacity="0.4"><animate attributeName="opacity" values="0.4;0.8;0.2;0.4" dur="2s" repeatCount="indefinite"/></line>
+        </svg>
+      </div>`,
+    drawFn: drawEjenAli
+  },
+  kencan: {
+    // Barbie — floating glitter, roses, diamond sparkles
+    bg: (w,h) => `radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,20,147,0.12) 0%, transparent 60%),
+                   radial-gradient(ellipse 60% 40% at 10% 80%, rgba(255,215,0,0.07) 0%, transparent 50%),
+                   linear-gradient(180deg, #2B0A1F 0%, #1A0512 60%, #0D0209 100%)`,
+    flashColor: 'rgba(255,100,180,0.2)',
+    svg: () => `
+      <!-- Floating roses and petals -->
+      <div style="position:absolute;inset:0;overflow:hidden;">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+          <!-- Rose 1 -->
+          <g transform="translate(15,20)" opacity="0.45">
+            <circle cx="0" cy="0" r="8" fill="#FF1493"/><circle cx="5" cy="-5" r="7" fill="#FF69B4"/><circle cx="-5" cy="-5" r="7" fill="#FF1493"/>
+            <circle cx="0" cy="-9" r="6" fill="#FFB6C1"/><circle cx="0" cy="0" r="4" fill="#FF1493"/>
+            <animateTransform attributeName="transform" type="translate" values="15 20;17 15;15 18;13 22;15 20" dur="8s" repeatCount="indefinite"/>
+          </g>
+          <!-- Rose 2 -->
+          <g transform="translate(80,60)" opacity="0.4">
+            <circle cx="0" cy="0" r="6" fill="#FF69B4"/><circle cx="4" cy="-4" r="5" fill="#FFB6C1"/><circle cx="-4" cy="-4" r="5" fill="#FF69B4"/>
+            <circle cx="0" cy="-7" r="5" fill="#FF1493"/><circle cx="0" cy="0" r="3" fill="#FF1493"/>
+            <animateTransform attributeName="transform" type="translate" values="80 60;82 55;78 58;80 63;80 60" dur="10s" repeatCount="indefinite"/>
+          </g>
+          <!-- Diamond sparkles -->
+          <g opacity="0.7">
+            <polygon points="30,10 32,15 30,20 28,15" fill="#FFD700"><animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite"/></polygon>
+            <polygon points="70,25 72,30 70,35 68,30" fill="#FFD700"><animate attributeName="opacity" values="1;0;1" dur="2s" begin="0.5s" repeatCount="indefinite"/></polygon>
+            <polygon points="20,70 22,75 20,80 18,75" fill="#FF69B4"><animate attributeName="opacity" values="0;0.8;0" dur="1.8s" begin="1s" repeatCount="indefinite"/></polygon>
+            <polygon points="85,15 87,20 85,25 83,20" fill="#FFD700"><animate attributeName="opacity" values="1;0;1" dur="1.3s" begin="0.3s" repeatCount="indefinite"/></polygon>
+            <polygon points="50,5 52,9 50,13 48,9" fill="#FF1493"><animate attributeName="opacity" values="0;1;0" dur="2.2s" begin="0.8s" repeatCount="indefinite"/></polygon>
+          </g>
+          <!-- Falling petals -->
+          <circle cx="45" cy="0" r="3" fill="#FF69B4" opacity="0.5">
+            <animateMotion path="M 0 0 Q 10 30 5 60 Q 0 90 -5 100" dur="6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0.5;0.5;0" dur="6s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="65" cy="0" r="2.5" fill="#FFB6C1" opacity="0.5">
+            <animateMotion path="M 0 0 Q -8 25 -3 55 Q 3 80 0 100" dur="8s" begin="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0.5;0.4;0" dur="8s" begin="2s" repeatCount="indefinite"/>
+          </circle>
+          <ellipse cx="25" cy="0" rx="4" ry="2" fill="#FF1493" opacity="0.4">
+            <animateMotion path="M 0 0 Q 15 20 8 50 Q 2 80 5 100" dur="7s" begin="4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;0.4;0.4;0" dur="7s" begin="4s" repeatCount="indefinite"/>
+          </ellipse>
+          <!-- Stars -->
+          <text x="55" y="50" font-size="14" fill="#FFD700" opacity="0.3" text-anchor="middle">✦</text>
+          <text x="20" y="40" font-size="10" fill="#FF69B4" opacity="0.35" text-anchor="middle">✦</text>
+          <text x="88" y="75" font-size="12" fill="#FFD700" opacity="0.3" text-anchor="middle">✦</text>
+        </svg>
+      </div>
+      <!-- Dream castle silhouette bottom -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:140px;overflow:hidden;">
+        <svg viewBox="0 0 1200 140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" width="100%" height="100%">
+          <defs><linearGradient id="cFog" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1A0512" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#1A0512" stop-opacity="1"/>
+          </linearGradient></defs>
+          <g fill="#2B0A1F" opacity="0.8">
+            <!-- Castle towers -->
+            <rect x="400" y="20" width="30" height="120"/><polygon points="400,20 415,0 430,20" fill="#3D0F33"/>
+            <rect x="500" y="40" width="200" height="100"/><!-- main hall -->
+            <rect x="550" y="10" width="40" height="130"/><polygon points="550,10 570,0 590,10" fill="#3D0F33"/>
+            <rect x="670" y="20" width="30" height="120"/><polygon points="670,20 685,0 700,20" fill="#3D0F33"/>
+            <rect x="300" y="60" width="120" height="80"/>
+            <rect x="760" y="55" width="130" height="85"/>
+            <!-- Arches -->
+            <path d="M510 140 Q525 100 540 140 Z" fill="#4A0F33"/><path d="M580 140 Q595 100 610 140 Z" fill="#4A0F33"/>
+            <path d="M640 140 Q655 100 670 140 Z" fill="#4A0F33"/>
+          </g>
+          <!-- Castle glow -->
+          <ellipse cx="570" cy="80" rx="200" ry="60" fill="rgba(255,20,147,0.05)"/>
+          <rect x="0" y="0" width="1200" height="140" fill="url(#cFog)"/>
+          <!-- Window lights in castle -->
+          <rect x="562" y="18" width="4" height="6" fill="#FFD700" opacity="0.6"><animate attributeName="opacity" values="0.6;0.9;0.6" dur="2s" repeatCount="indefinite"/></rect>
+          <rect x="684" y="25" width="3" height="5" fill="#FF69B4" opacity="0.6"><animate attributeName="opacity" values="0.6;0.3;0.8" dur="3s" repeatCount="indefinite"/></rect>
+          <rect x="415" y="25" width="3" height="5" fill="#FFD700" opacity="0.5"><animate attributeName="opacity" values="0.5;0.9;0.5" dur="1.8s" repeatCount="indefinite"/></rect>
+        </svg>
+      </div>`,
+    drawFn: drawBarbie
+  },
+  cerita: {
+    // Upin & Ipin — kampung, pohon kelapa, langit sore
+    bg: (w,h) => `radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,193,7,0.1) 0%, transparent 55%),
+                   radial-gradient(ellipse 60% 40% at 0% 80%, rgba(76,175,80,0.06) 0%, transparent 50%),
+                   linear-gradient(180deg, #2A1B0A 0%, #1B1206 60%, #0D0904 100%)`,
+    flashColor: 'rgba(255,193,7,0.18)',
+    svg: () => `
+      <!-- Sunset sky glow -->
+      <div style="position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,120,20,0.08) 0%,transparent 100%);"></div>
+      <!-- Kampung scene bottom -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:220px;overflow:hidden;">
+        <svg viewBox="0 0 1200 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" width="100%" height="100%">
+          <defs><linearGradient id="kFog" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1B1206" stop-opacity="0"/>
+            <stop offset="85%" stop-color="#1B1206" stop-opacity="1"/>
+          </linearGradient></defs>
+          <!-- Houses -->
+          <g fill="#3D2A10" opacity="0.85">
+            <rect x="50" y="130" width="120" height="90"/><polygon points="50,130 110,90 170,130" fill="#523818"/>
+            <rect x="200" y="150" width="90" height="70"/><polygon points="200,150 245,115 290,150" fill="#523818"/>
+            <rect x="700" y="140" width="130" height="80"/><polygon points="700,140 765,100 830,140" fill="#523818"/>
+            <rect x="860" y="155" width="100" height="65"/><polygon points="860,155 910,118 960,155" fill="#523818"/>
+            <rect x="1000" y="135" width="140" height="85"/><polygon points="1000,135 1070,92 1140,135" fill="#523818"/>
+          </g>
+          <!-- Coconut trees -->
+          <g fill="#2A1B0A" opacity="0.9">
+            <!-- Tree 1 -->
+            <rect x="355" y="80" width="8" height="140"/><animateTransform attributeName="transform" type="rotate" values="0 359 220;2 359 220;0 359 220;-1 359 220;0 359 220" dur="4s" repeatCount="indefinite"/>
+            <ellipse cx="340" cy="80" rx="28" ry="12" fill="#3D2A10"/><ellipse cx="359" cy="72" rx="22" ry="10" fill="#3D2A10"/>
+            <ellipse cx="375" cy="82" rx="25" ry="11" fill="#3D2A10"/>
+            <!-- Tree 2 -->
+            <rect x="490" y="60" width="9" height="160"/><ellipse cx="473" cy="58" rx="30" ry="13" fill="#3D2A10"/><ellipse cx="490" cy="50" rx="24" ry="11" fill="#3D2A10"/><ellipse cx="509" cy="60" rx="27" ry="12" fill="#3D2A10"/>
+            <!-- Tree 3 -->
+            <rect x="600" y="90" width="7" height="130"/><ellipse cx="585" cy="88" rx="24" ry="10" fill="#3D2A10"/><ellipse cx="600" cy="80" rx="20" ry="9" fill="#3D2A10"/><ellipse cx="617" cy="90" rx="22" ry="10" fill="#3D2A10"/>
+          </g>
+          <!-- Coconuts -->
+          <circle cx="352" cy="88" r="5" fill="#3D2A10" opacity="0.7"/>
+          <circle cx="362" cy="84" r="4" fill="#3D2A10" opacity="0.7"/>
+          <circle cx="486" cy="64" r="5" fill="#3D2A10" opacity="0.7"/>
+          <!-- Window lights in houses -->
+          <rect x="80" y="150" width="18" height="14" fill="#FFC107" opacity="0.35" rx="1"/>
+          <rect x="115" y="150" width="18" height="14" fill="#FFC107" opacity="0.3" rx="1"/>
+          <rect x="715" y="160" width="20" height="15" fill="#FFC107" opacity="0.3" rx="1"/>
+          <rect x="750" y="160" width="20" height="15" fill="#FFC107" opacity="0.3" rx="1"/>
+          <!-- Firefly dots -->
+          <circle cx="450" cy="140" r="2" fill="#FFEE58" opacity="0.8"><animate attributeName="opacity" values="0.8;0.1;0.8" dur="1.8s" repeatCount="indefinite"/><animate attributeName="cy" values="140;135;140" dur="3s" repeatCount="indefinite"/></circle>
+          <circle cx="560" cy="110" r="1.5" fill="#FFEE58" opacity="0.6"><animate attributeName="opacity" values="0.1;0.7;0.1" dur="2.3s" begin="0.8s" repeatCount="indefinite"/></circle>
+          <circle cx="640" cy="130" r="2" fill="#FFEE58" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.5s" begin="1.2s" repeatCount="indefinite"/></circle>
+          <rect x="0" y="0" width="1200" height="220" fill="url(#kFog)"/>
+        </svg>
+      </div>
+      <!-- Stars twinkling kampung sky -->
+      <svg style="position:absolute;top:0;left:0;width:100%;height:50%;opacity:0.5;" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="8" r="0.8" fill="#FFC107"><animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/></circle>
+        <circle cx="25" cy="4" r="1" fill="#FFEE58"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.7s" begin="0.5s" repeatCount="indefinite"/></circle>
+        <circle cx="42" cy="10" r="0.7" fill="#FFC107"><animate attributeName="opacity" values="1;0.2;1" dur="2.4s" begin="1s" repeatCount="indefinite"/></circle>
+        <circle cx="60" cy="5" r="0.9" fill="#FFEE58"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.9s" begin="0.3s" repeatCount="indefinite"/></circle>
+        <circle cx="78" cy="9" r="0.8" fill="#FFC107"><animate attributeName="opacity" values="1;0.4;1" dur="2.2s" begin="0.8s" repeatCount="indefinite"/></circle>
+        <circle cx="88" cy="3" r="1" fill="#FFEE58"><animate attributeName="opacity" values="0.3;0.9;0.3" dur="1.6s" repeatCount="indefinite"/></circle>
+      </svg>`,
+    drawFn: drawUpin
+  },
+  bucket: {
+    // One Piece — ocean, ship, waves
+    bg: (w,h) => `radial-gradient(ellipse 70% 40% at 50% 0%, rgba(255,193,7,0.08) 0%, transparent 50%),
+                   linear-gradient(180deg, #03101F 0%, #020B14 50%, #010609 100%)`,
+    flashColor: 'rgba(255,193,7,0.18)',
+    svg: () => `
+      <!-- Ocean waves bottom -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:160px;overflow:hidden;">
+        <svg viewBox="0 0 1200 160" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" width="100%" height="100%">
+          <defs><linearGradient id="oFog" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#020B14" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#020B14" stop-opacity="1"/>
+          </linearGradient></defs>
+          <!-- Ocean fill -->
+          <rect x="0" y="80" width="1200" height="80" fill="#052038" opacity="0.8"/>
+          <!-- Wave 1 -->
+          <path d="M0 80 Q60 60 120 80 Q180 100 240 80 Q300 60 360 80 Q420 100 480 80 Q540 60 600 80 Q660 100 720 80 Q780 60 840 80 Q900 100 960 80 Q1020 60 1080 80 Q1140 100 1200 80 L1200 160 L0 160 Z" fill="#073050" opacity="0.9">
+            <animate attributeName="d" values="M0 80 Q60 60 120 80 Q180 100 240 80 Q300 60 360 80 Q420 100 480 80 Q540 60 600 80 Q660 100 720 80 Q780 60 840 80 Q900 100 960 80 Q1020 60 1080 80 Q1140 100 1200 80 L1200 160 L0 160 Z;M0 90 Q60 70 120 90 Q180 110 240 90 Q300 70 360 90 Q420 110 480 90 Q540 70 600 90 Q660 110 720 90 Q780 70 840 90 Q900 110 960 90 Q1020 70 1080 90 Q1140 110 1200 90 L1200 160 L0 160 Z;M0 80 Q60 60 120 80 Q180 100 240 80 Q300 60 360 80 Q420 100 480 80 Q540 60 600 80 Q660 100 720 80 Q780 60 840 80 Q900 100 960 80 Q1020 60 1080 80 Q1140 100 1200 80 L1200 160 L0 160 Z" dur="4s" repeatCount="indefinite"/>
+          </path>
+          <!-- Wave 2 foam -->
+          <path d="M0 95 Q80 75 160 95 Q240 115 320 95 Q400 75 480 95 Q560 115 640 95 Q720 75 800 95 Q880 115 960 95 Q1040 75 1120 95 Q1160 105 1200 95" fill="none" stroke="rgba(94,200,255,0.3)" stroke-width="2">
+            <animate attributeName="d" values="M0 95 Q80 75 160 95 Q240 115 320 95 Q400 75 480 95 Q560 115 640 95 Q720 75 800 95 Q880 115 960 95 Q1040 75 1120 95 Q1160 105 1200 95;M0 100 Q80 80 160 100 Q240 120 320 100 Q400 80 480 100 Q560 120 640 100 Q720 80 800 100 Q880 120 960 100 Q1040 80 1120 100 Q1160 110 1200 100;M0 95 Q80 75 160 95 Q240 115 320 95 Q400 75 480 95 Q560 115 640 95 Q720 75 800 95 Q880 115 960 95 Q1040 75 1120 95 Q1160 105 1200 95" dur="3s" repeatCount="indefinite"/>
+          </path>
+          <rect x="0" y="0" width="1200" height="160" fill="url(#oFog)"/>
+        </svg>
+      </div>
+      <!-- Pirate ship silhouette -->
+      <div style="position:absolute;bottom:60px;right:5%;animation:scene-ship-bob 4s ease-in-out infinite;">
+        <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" width="160" height="140" opacity="0.6">
+          <!-- Hull -->
+          <path d="M20 120 Q30 140 100 145 Q170 140 180 120 L175 100 L25 100 Z" fill="#052038"/>
+          <!-- Deck -->
+          <rect x="25" y="95" width="150" height="10" fill="#073050"/>
+          <!-- Mast 1 -->
+          <rect x="65" y="20" width="5" height="80" fill="#04192E"/>
+          <!-- Sail 1 -->
+          <path d="M70 22 L115 35 L115 75 L70 80 Z" fill="#0A3D63" opacity="0.8"/>
+          <!-- Mast 2 -->
+          <rect x="115" y="30" width="4" height="70" fill="#04192E"/>
+          <!-- Sail 2 -->
+          <path d="M119 32 L155 42 L155 72 L119 75 Z" fill="#0A3D63" opacity="0.7"/>
+          <!-- Skull flag -->
+          <rect x="65" y="5" width="3" height="18" fill="#04192E"/>
+          <rect x="68" y="5" width="20" height="14" fill="#041428"/>
+          <!-- Simple skull on flag -->
+          <circle cx="78" cy="11" r="4" fill="#FFC107" opacity="0.6"/>
+          <rect x="75" y="15" width="6" height="3" fill="#FFC107" opacity="0.5"/>
+          <!-- Cannon -->
+          <rect x="40" y="103" width="18" height="8" rx="2" fill="#041020"/>
+          <rect x="148" y="103" width="18" height="8" rx="2" fill="#041020"/>
+        </svg>
+      </div>
+      <!-- Second smaller ship left -->
+      <div style="position:absolute;bottom:55px;left:3%;animation:scene-ship-bob 5s ease-in-out infinite 1.5s;">
+        <svg viewBox="0 0 120 110" xmlns="http://www.w3.org/2000/svg" width="90" height="80" opacity="0.35">
+          <path d="M10 75 Q20 88 60 92 Q100 88 110 75 L105 60 L15 60 Z" fill="#052038"/>
+          <rect x="15" y="57" width="90" height="7" fill="#073050"/>
+          <rect x="38" y="12" width="4" height="48" fill="#04192E"/>
+          <path d="M42 14 L78 23 L78 50 L42 52 Z" fill="#0A3D63" opacity="0.7"/>
+        </svg>
+      </div>
+      <!-- Treasure chest silhouette -->
+      <div style="position:absolute;bottom:40px;left:15%;opacity:0.4;">
+        <svg viewBox="0 0 60 45" xmlns="http://www.w3.org/2000/svg" width="55" height="40">
+          <rect x="0" y="18" width="60" height="27" rx="3" fill="#3D2A10"/>
+          <path d="M0 20 Q30 8 60 20" fill="#523818" stroke="#FFC107" stroke-width="1"/>
+          <rect x="22" y="25" width="16" height="12" rx="2" fill="#FFC107" opacity="0.6"/>
+          <circle cx="30" cy="31" r="3" fill="#FF8F00" opacity="0.8"/>
+          <!-- Gold glow -->
+          <ellipse cx="30" cy="32" rx="8" ry="4" fill="rgba(255,193,7,0.3)"/>
+        </svg>
+      </div>`,
+    drawFn: drawOnePiece
+  },
+  galeri: {
+    // Romantic gallery — soft hearts, bokeh lights, rose petals
+    bg: (w,h) => `radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,158,196,0.1) 0%, transparent 55%),
+                   radial-gradient(ellipse 50% 40% at 90% 70%, rgba(186,104,255,0.08) 0%, transparent 50%),
+                   linear-gradient(180deg, #2B1033 0%, #1A0A22 60%, #0D0614 100%)`,
+    flashColor: 'rgba(255,100,180,0.18)',
+    svg: () => `
+      <!-- Bokeh light circles -->
+      <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.4;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="15" cy="20" r="8" fill="rgba(255,158,196,0.3)" filter="blur(4px)"><animate attributeName="r" values="8;10;8" dur="4s" repeatCount="indefinite"/></circle>
+        <circle cx="80" cy="15" r="12" fill="rgba(186,104,255,0.25)" filter="blur(5px)"><animate attributeName="r" values="12;14;12" dur="6s" begin="1s" repeatCount="indefinite"/></circle>
+        <circle cx="50" cy="70" r="10" fill="rgba(255,210,63,0.2)" filter="blur(4px)"><animate attributeName="r" values="10;12;10" dur="5s" begin="2s" repeatCount="indefinite"/></circle>
+        <circle cx="90" cy="60" r="7" fill="rgba(255,158,196,0.25)" filter="blur(3px)"><animate attributeName="r" values="7;9;7" dur="3.5s" begin="0.5s" repeatCount="indefinite"/></circle>
+        <circle cx="10" cy="75" r="9" fill="rgba(186,104,255,0.2)" filter="blur(4px)"><animate attributeName="r" values="9;11;9" dur="4.5s" begin="1.5s" repeatCount="indefinite"/></circle>
+        <!-- Floating hearts -->
+        <text x="30" y="35" font-size="12" fill="rgba(255,158,196,0.5)" text-anchor="middle">♡</text>
+        <text x="70" y="45" font-size="8" fill="rgba(186,104,255,0.5)" text-anchor="middle">♡</text>
+        <text x="55" y="20" font-size="10" fill="rgba(255,158,196,0.4)" text-anchor="middle">♡</text>
+        <text x="20" y="55" font-size="7" fill="rgba(255,210,63,0.5)" text-anchor="middle">✦</text>
+        <text x="85" y="35" font-size="9" fill="rgba(255,158,196,0.4)" text-anchor="middle">✦</text>
+        <!-- Rising hearts -->
+        <text font-size="14" fill="rgba(255,158,196,0.4)" text-anchor="middle">♡<animateMotion path="M 40 100 Q 35 60 40 10" dur="6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.4;0.4;0" dur="6s" repeatCount="indefinite"/></text>
+        <text font-size="10" fill="rgba(186,104,255,0.4)" text-anchor="middle">♡<animateMotion path="M 65 100 Q 70 55 65 5" dur="8s" begin="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.3;0.3;0" dur="8s" begin="2s" repeatCount="indefinite"/></text>
+        <text font-size="12" fill="rgba(255,158,196,0.35)" text-anchor="middle">♡<animateMotion path="M 20 100 Q 15 50 22 5" dur="7s" begin="4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.35;0.35;0" dur="7s" begin="4s" repeatCount="indefinite"/></text>
+      </svg>
+      <!-- Photo frame decorations bottom corners -->
+      <div style="position:absolute;bottom:20px;left:20px;opacity:0.3;">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+          <rect x="5" y="5" width="50" height="50" rx="4" fill="none" stroke="#FF9EC4" stroke-width="2"/>
+          <rect x="10" y="10" width="40" height="40" rx="2" fill="none" stroke="#FF9EC4" stroke-width="1" stroke-dasharray="4 3"/>
+          <circle cx="30" cy="30" r="8" fill="rgba(255,158,196,0.2)"/>
+          <text x="30" y="34" font-size="10" fill="#FF9EC4" text-anchor="middle">💙</text>
+        </svg>
+      </div>
+      <div style="position:absolute;bottom:20px;right:20px;opacity:0.3;transform:scaleX(-1);">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+          <rect x="5" y="5" width="50" height="50" rx="4" fill="none" stroke="#BA68FF" stroke-width="2"/>
+          <rect x="10" y="10" width="40" height="40" rx="2" fill="none" stroke="#BA68FF" stroke-width="1" stroke-dasharray="4 3"/>
+          <circle cx="30" cy="30" r="8" fill="rgba(186,104,255,0.2)"/>
+          <text x="30" y="34" font-size="10" fill="#BA68FF" text-anchor="middle">🌸</text>
+        </svg>
+      </div>`,
+    drawFn: drawRomantic
+  },
+  note: {
+    // Cars 3 — race track, checkered flag, tire marks, speed lines
+    bg: (w,h) => `radial-gradient(ellipse 60% 40% at 50% 0%, rgba(225,6,0,0.08) 0%, transparent 50%),
+                   linear-gradient(180deg, #121214 0%, #0A0A0C 60%, #050505 100%)`,
+    flashColor: 'rgba(225,6,0,0.22)',
+    svg: () => `
+      <!-- Race track ground -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:130px;overflow:hidden;">
+        <svg viewBox="0 0 1200 130" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" width="100%" height="100%">
+          <defs><linearGradient id="tFog" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0A0A0C" stop-opacity="0"/>
+            <stop offset="85%" stop-color="#0A0A0C" stop-opacity="1"/>
+          </linearGradient></defs>
+          <!-- Asphalt -->
+          <rect x="0" y="55" width="1200" height="75" fill="#1C1C1F"/>
+          <!-- Center line dashed -->
+          <line x1="0" y1="90" x2="1200" y2="90" stroke="#E10600" stroke-width="3" stroke-dasharray="40 25" opacity="0.5">
+            <animate attributeName="stroke-dashoffset" from="0" to="-130" dur="1.2s" repeatCount="indefinite"/>
+          </line>
+          <!-- Track edge lines -->
+          <line x1="0" y1="58" x2="1200" y2="58" stroke="#C0C0C0" stroke-width="2" opacity="0.3"/>
+          <line x1="0" y1="128" x2="1200" y2="128" stroke="#C0C0C0" stroke-width="2" opacity="0.3"/>
+          <!-- Tire marks -->
+          <path d="M0 80 Q200 75 400 85 Q600 95 800 80 Q1000 70 1200 82" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="6" opacity="0.5"/>
+          <path d="M0 100 Q300 95 500 105 Q700 115 900 100 Q1100 90 1200 102" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="4" opacity="0.4"/>
+          <!-- Checkered pattern start -->
+          <g opacity="0.7">
+            <rect x="0" y="55" width="20" height="15" fill="#1C1C1F"/>
+            <rect x="20" y="55" width="20" height="15" fill="#C0C0C0" opacity="0.5"/>
+            <rect x="40" y="55" width="20" height="15" fill="#1C1C1F"/>
+            <rect x="60" y="55" width="20" height="15" fill="#C0C0C0" opacity="0.5"/>
+            <rect x="0" y="70" width="20" height="15" fill="#C0C0C0" opacity="0.5"/>
+            <rect x="20" y="70" width="20" height="15" fill="#1C1C1F"/>
+            <rect x="40" y="70" width="20" height="15" fill="#C0C0C0" opacity="0.5"/>
+            <rect x="60" y="70" width="20" height="15" fill="#1C1C1F"/>
+          </g>
+          <rect x="0" y="0" width="1200" height="130" fill="url(#tFog)"/>
+        </svg>
+      </div>
+      <!-- Speed lines left -->
+      <div style="position:absolute;top:0;left:0;width:30%;height:100%;overflow:hidden;opacity:0.12;">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+          <line x1="0" y1="30" x2="100" y2="30" stroke="#E10600" stroke-width="2"><animate attributeName="x1" values="0;-20;0" dur="0.4s" repeatCount="indefinite"/></line>
+          <line x1="0" y1="45" x2="80" y2="45" stroke="#C0C0C0" stroke-width="1.5"><animate attributeName="x1" values="0;-15;0" dur="0.35s" begin="0.1s" repeatCount="indefinite"/></line>
+          <line x1="0" y1="60" x2="90" y2="60" stroke="#E10600" stroke-width="1"><animate attributeName="x1" values="0;-25;0" dur="0.5s" begin="0.05s" repeatCount="indefinite"/></line>
+          <line x1="0" y1="20" x2="70" y2="20" stroke="#C0C0C0" stroke-width="1"><animate attributeName="x1" values="0;-10;0" dur="0.3s" begin="0.2s" repeatCount="indefinite"/></line>
+        </svg>
+      </div>
+      <!-- Podium trophies right side -->
+      <div style="position:absolute;right:5%;bottom:80px;opacity:0.3;">
+        <svg viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg" width="80" height="70">
+          <!-- Trophy 1 (gold) -->
+          <path d="M35 10 Q35 30 45 35 Q55 30 55 10 Z" fill="#E10600"/>
+          <rect x="42" y="35" width="6" height="10" fill="#E10600"/>
+          <rect x="35" y="45" width="20" height="5" rx="1" fill="#C0C0C0"/>
+          <!-- Podium blocks -->
+          <rect x="30" y="50" width="30" height="30" fill="#E10600" rx="2"/><!-- 1st -->
+          <rect x="5" y="60" width="25" height="20" fill="#444" rx="2"/><!-- 2nd -->
+          <rect x="60" y="65" width="25" height="15" fill="#444" rx="2"/><!-- 3rd -->
+          <text x="45" y="68" font-size="8" fill="#FFD700" text-anchor="middle" font-weight="bold">1</text>
+          <text x="18" y="74" font-size="7" fill="#C0C0C0" text-anchor="middle">2</text>
+          <text x="73" y="77" font-size="7" fill="#CD7F32" text-anchor="middle">3</text>
+        </svg>
+      </div>
+      <!-- Exhaust sparks -->
+      <svg style="position:absolute;bottom:70px;left:10%;width:200px;height:60px;opacity:0.5;" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="30" r="3" fill="#E10600"><animate attributeName="cx" from="10" to="200" dur="0.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="0.6s" repeatCount="indefinite"/></circle>
+        <circle cx="10" cy="20" r="2" fill="#FF8800"><animate attributeName="cx" from="10" to="200" dur="0.5s" begin="0.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="0.5s" begin="0.1s" repeatCount="indefinite"/></circle>
+        <circle cx="10" cy="40" r="2" fill="#E10600"><animate attributeName="cx" from="10" to="200" dur="0.7s" begin="0.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="0.7s" begin="0.2s" repeatCount="indefinite"/></circle>
+      </svg>`,
+    drawFn: drawCars
+  }
+};
+
+// ── Per-tab canvas draw functions ──
+
+// ── Particle pools per scene ──
+let sceneLocalParticles = [];
+
+function spawnFirework(x,y,colors,count=30,scale=1){
+  for(let i=0;i<count;i++){
+    const angle=Math.random()*Math.PI*2, speed=(Math.random()*5+2)*scale;
+    sceneLocalParticles.push({
+      x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed-Math.random()*3,
+      life:1,decay:Math.random()*0.018+0.01,r:Math.random()*3.5+1,
+      color:colors[Math.floor(Math.random()*colors.length)],type:Math.random()>0.5?'spark':'dot'
+    });
+  }
+}
+function spawnGlitter(x,y,color,count=8){
+  for(let i=0;i<count;i++){
+    const angle=Math.random()*Math.PI*2, speed=Math.random()*3+0.5;
+    sceneLocalParticles.push({
+      x:x+(Math.random()-0.5)*60, y:y+(Math.random()-0.5)*40,
+      vx:Math.cos(angle)*speed*0.5, vy:Math.sin(angle)*speed*0.5-0.5,
+      life:1,decay:Math.random()*0.015+0.008,r:Math.random()*2.5+0.5,
+      color,type:'glow'
+    });
+  }
+}
+function drawLocalParticles(ctx){
+  sceneLocalParticles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.06; p.vx*=0.96; p.life-=p.decay;
+    const a=Math.max(0,p.life);
+    const hex=p.color.replace('#','');
+    const r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
+    if(p.type==='glow'){
+      const gr=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*4);
+      gr.addColorStop(0,`rgba(${r},${g},${b},${a*0.9})`); gr.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r*4,0,Math.PI*2); ctx.fillStyle=gr; ctx.fill();
+    } else if(p.type==='spark'){
+      ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p.x-p.vx*5,p.y-p.vy*5);
+      ctx.strokeStyle=`rgba(${r},${g},${b},${a})`; ctx.lineWidth=p.r*0.5; ctx.stroke();
+    } else {
+      ctx.beginPath(); ctx.arc(p.x,p.y,Math.max(0.1,p.r*a),0,Math.PI*2);
+      ctx.fillStyle=`rgba(${r},${g},${b},${a})`; ctx.fill();
+    }
+  });
+  sceneLocalParticles=sceneLocalParticles.filter(p=>p.life>0&&p.y<window.innerHeight+30);
+}
+
+let lastLocalSpawn=0;
+
+function drawEndgame(ctx, w, h, t) {
+  // Horizon fire glow
+  const glowA = (Math.sin(t*0.025)*0.5+0.5)*0.18+0.12;
+  const grd = ctx.createLinearGradient(0, h*0.55, 0, h);
+  grd.addColorStop(0,'rgba(0,0,0,0)'); grd.addColorStop(0.4,`rgba(255,80,0,${glowA})`); grd.addColorStop(1,'rgba(180,20,0,0.25)');
+  ctx.fillStyle=grd; ctx.fillRect(0,h*0.55,w,h*0.45);
+  // Portal glow right
+  const pa=(Math.sin(t*0.03)*0.5+0.5)*0.22+0.15;
+  const pg=ctx.createRadialGradient(w*0.88,h*0.45,0,w*0.88,h*0.45,h*0.4);
+  pg.addColorStop(0,`rgba(255,120,0,${pa})`); pg.addColorStop(0.4,`rgba(255,60,0,${pa*0.4})`); pg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=pg; ctx.fillRect(0,0,w,h);
+  // Random explosions
+  if(t-lastLocalSpawn>70+Math.random()*90){ lastLocalSpawn=t;
+    spawnFirework(Math.random()*w*0.8+w*0.05, Math.random()*h*0.55+h*0.05,
+      ['#FF8800','#FF4400','#FFCC00','#FF2200','#5EC8FF'], 35, Math.random()*0.7+0.6);
+  }
+  drawLocalParticles(ctx);
+}
+
+function drawEjenAli(ctx, w, h, t) {
+  // Scan line sweep
+  const scanY = (t*1.8) % h;
+  const sg = ctx.createLinearGradient(0,scanY-40,0,scanY+6);
+  sg.addColorStop(0,'rgba(255,209,0,0)'); sg.addColorStop(0.7,'rgba(255,209,0,0.0)'); sg.addColorStop(1,'rgba(255,209,0,0.12)');
+  ctx.fillStyle=sg; ctx.fillRect(0,scanY-40,w,46);
+  // City ambient glow bottom
+  const ca=(Math.sin(t*0.02)*0.5+0.5)*0.15+0.1;
+  const cg=ctx.createLinearGradient(0,h*0.6,0,h);
+  cg.addColorStop(0,'rgba(0,0,0,0)'); cg.addColorStop(1,`rgba(255,209,0,${ca})`);
+  ctx.fillStyle=cg; ctx.fillRect(0,h*0.6,w,h*0.4);
+  // Radar pulse
+  const pr=(t*1.5)%(Math.max(w,h)*0.45);
+  const pa2=Math.max(0,0.3-pr/Math.max(w,h));
+  ctx.beginPath(); ctx.arc(w*0.82,h*0.28,pr,0,Math.PI*2);
+  ctx.strokeStyle=`rgba(255,209,0,${pa2})`; ctx.lineWidth=2.5; ctx.stroke();
+  // Hologram data lines
+  ctx.save(); ctx.globalAlpha=0.07;
+  for(let i=0;i<6;i++){
+    const yl=h*0.1+i*(h*0.14);
+    const xOff=(t*0.5+i*80)%w;
+    ctx.strokeStyle='#FFD100'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(xOff,yl); ctx.lineTo(xOff+w*0.3,yl); ctx.stroke();
+  }
+  ctx.restore();
+  // Laser shots
+  if(t-lastLocalSpawn>50+Math.random()*60){ lastLocalSpawn=t;
+    const lx=Math.random()*w, ly=Math.random()*h*0.7;
+    spawnGlitter(lx,ly,'#FFD100',10);
+    spawnGlitter(lx,ly,'#E63946',5);
+  }
+  drawLocalParticles(ctx);
+}
+
+function drawBarbie(ctx, w, h, t) {
+  // Pink spotlight
+  const ba=(Math.sin(t*0.02)*0.5+0.5)*0.14+0.1;
+  const bg2=ctx.createRadialGradient(w*0.5,h*0.3,0,w*0.5,h*0.3,h*0.7);
+  bg2.addColorStop(0,`rgba(255,20,147,${ba})`); bg2.addColorStop(0.5,`rgba(255,105,180,${ba*0.3})`); bg2.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=bg2; ctx.fillRect(0,0,w,h);
+  // Castle glow bottom
+  const cg2=ctx.createLinearGradient(0,h*0.7,0,h);
+  cg2.addColorStop(0,'rgba(0,0,0,0)'); cg2.addColorStop(1,`rgba(255,20,147,0.12)`);
+  ctx.fillStyle=cg2; ctx.fillRect(0,h*0.7,w,h*0.3);
+  // Glitter bursts
+  if(t-lastLocalSpawn>25+Math.random()*35){ lastLocalSpawn=t;
+    spawnGlitter(Math.random()*w,Math.random()*h*0.8,
+      Math.random()>0.5?'#FF69B4':'#FFD700', Math.floor(Math.random()*6+4));
+  }
+  drawLocalParticles(ctx);
+}
+
+function drawUpin(ctx, w, h, t) {
+  // Warm kampung sky
+  const sa=(Math.sin(t*0.015)*0.5+0.5)*0.15+0.1;
+  const sg2=ctx.createRadialGradient(w*0.5,-h*0.1,0,w*0.5,-h*0.1,h*0.9);
+  sg2.addColorStop(0,`rgba(255,140,20,${sa})`); sg2.addColorStop(0.5,`rgba(200,80,10,${sa*0.4})`); sg2.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=sg2; ctx.fillRect(0,0,w,h);
+  // Ground warm glow
+  const gg=ctx.createLinearGradient(0,h*0.7,0,h);
+  gg.addColorStop(0,'rgba(0,0,0,0)'); gg.addColorStop(1,'rgba(255,193,7,0.1)');
+  ctx.fillStyle=gg; ctx.fillRect(0,h*0.7,w,h*0.3);
+  // Firefly particles spawn
+  if(t-lastLocalSpawn>40+Math.random()*50){ lastLocalSpawn=t;
+    spawnGlitter(Math.random()*w,h*0.4+Math.random()*h*0.4,'#FFEE58',3);
+  }
+  drawLocalParticles(ctx);
+}
+
+function drawOnePiece(ctx, w, h, t) {
+  // Ocean waves at bottom - animated
+  const wa=(Math.sin(t*0.04)*0.5+0.5)*0.18+0.12;
+  const wg=ctx.createLinearGradient(0,h*0.65,0,h);
+  wg.addColorStop(0,'rgba(0,0,0,0)'); wg.addColorStop(0.4,`rgba(7,70,120,${wa})`); wg.addColorStop(1,'rgba(5,40,80,0.35)');
+  ctx.fillStyle=wg; ctx.fillRect(0,h*0.65,w,h*0.35);
+  // Wave crest shimmer
+  for(let i=0;i<5;i++){
+    const wx=((t*2+i*200)%( w+200))-100;
+    const wy=h*0.68+i*8;
+    const ww=80+Math.sin(t*0.05+i)*40;
+    const wgr=ctx.createLinearGradient(wx,wy,wx+ww,wy);
+    wgr.addColorStop(0,'rgba(94,200,255,0)'); wgr.addColorStop(0.5,`rgba(94,200,255,0.2)`); wgr.addColorStop(1,'rgba(94,200,255,0)');
+    ctx.fillStyle=wgr; ctx.fillRect(wx,wy-3,ww,6);
+  }
+  // Moon glow top left
+  const ma=(Math.sin(t*0.012)*0.3+0.6)*0.18;
+  const mg=ctx.createRadialGradient(w*0.15,h*0.14,0,w*0.15,h*0.14,h*0.35);
+  mg.addColorStop(0,`rgba(255,220,100,${ma})`); mg.addColorStop(0.3,`rgba(255,193,7,${ma*0.4})`); mg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=mg; ctx.fillRect(0,0,w*0.5,h*0.5);
+  // Ocean spray particles
+  if(t-lastLocalSpawn>55+Math.random()*45){ lastLocalSpawn=t;
+    spawnGlitter(Math.random()*w, h*0.7+Math.random()*h*0.1,'#5EC8FF',6);
+  }
+  drawLocalParticles(ctx);
+}
+
+function drawRomantic(ctx, w, h, t) {
+  // Warm pink spotlight center
+  const ra=(Math.sin(t*0.02)*0.5+0.5)*0.18+0.12;
+  const rg=ctx.createRadialGradient(w*0.5,h*0.4,0,w*0.5,h*0.4,h*0.8);
+  rg.addColorStop(0,`rgba(255,105,180,${ra})`); rg.addColorStop(0.4,`rgba(186,104,255,${ra*0.3})`); rg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=rg; ctx.fillRect(0,0,w,h);
+  // Bokeh circles
+  ctx.save(); ctx.globalAlpha=0.12;
+  for(let i=0;i<8;i++){
+    const bx=w*[0.1,0.3,0.5,0.7,0.9,0.2,0.6,0.85][i];
+    const by=h*[0.2,0.1,0.7,0.15,0.6,0.8,0.4,0.3][i];
+    const br=30+Math.sin(t*0.02+i)*15;
+    ctx.beginPath(); ctx.arc(bx,by,br,0,Math.PI*2);
+    ctx.fillStyle=i%2===0?'rgba(255,158,196,0.8)':'rgba(186,104,255,0.8)'; ctx.fill();
+  }
+  ctx.restore();
+  // Heart particles
+  if(t-lastLocalSpawn>35+Math.random()*45){ lastLocalSpawn=t;
+    spawnGlitter(Math.random()*w, h*0.3+Math.random()*h*0.5,
+      Math.random()>0.5?'#FF69B4':'#BA68FF', Math.floor(Math.random()*6+3));
+  }
+  drawLocalParticles(ctx);
+}
+
+function drawCars(ctx, w, h, t) {
+  // Speed lines streaking across
+  for(let i=0;i<14;i++){
+    const y=(h*0.15)+(i/14)*h*0.6;
+    const spd=4+(i%3)*2;
+    const x=((t*spd+i*173)%( w+300))-150;
+    const len=80+Math.sin(t*0.05+i)*40;
+    const lg=ctx.createLinearGradient(x-len,y,x+10,y);
+    const col=i%3===0?'225,6,0':i%3===1?'192,192,192':'255,100,0';
+    lg.addColorStop(0,`rgba(${col},0)`); lg.addColorStop(1,`rgba(${col},0.35)`);
+    ctx.strokeStyle=lg; ctx.lineWidth=Math.max(0.5,2.5-i*0.12);
+    ctx.beginPath(); ctx.moveTo(x-len,y); ctx.lineTo(x+10,y); ctx.stroke();
+  }
+  // Track glow bottom
+  const tg=ctx.createLinearGradient(0,h*0.65,0,h);
+  tg.addColorStop(0,'rgba(0,0,0,0)'); tg.addColorStop(1,'rgba(225,6,0,0.12)');
+  ctx.fillStyle=tg; ctx.fillRect(0,h*0.65,w,h*0.35);
+  // Exhaust fire sparks
+  if(t-lastLocalSpawn>20+Math.random()*30){ lastLocalSpawn=t;
+    spawnFirework(Math.random()*w*0.5+w*0.1, h*0.7+Math.random()*h*0.15,
+      ['#E10600','#FF8800','#FF4400','#FFCC00'], 12, 0.5);
+  }
+  drawLocalParticles(ctx);
+}
+
+// ── SCENE ENGINE ──
+let sceneParticles=[], sceneTime=0, currentScene='beranda', sceneAnimId=null;
+let lastSceneExp=0, lastSceneBurst=0;
+
+function spawnSceneExplosion(ctx,w,h,x,y,scale=1){
+  const colors=['#FF8800','#FF4400','#FFCC00','#FF2200','#FFB300'];
+  for(let i=0;i<Math.floor(25*scale);i++){
+    const angle=Math.random()*Math.PI*2,speed=(Math.random()*3.5+1)*scale;
+    sceneParticles.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed-Math.random()*2,
+      life:1,decay:Math.random()*0.025+0.012,r:Math.random()*3*scale+1,
+      color:colors[Math.floor(Math.random()*colors.length)],type:Math.random()>0.6?'spark':'dot'});
+  }
+}
+function spawnSceneEnergyBurst(ctx,w,h,x,y){
+  for(let i=0;i<14;i++){
+    const angle=Math.random()*Math.PI*2,speed=Math.random()*4+2;
+    sceneParticles.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+      life:1,decay:0.018,r:Math.random()*2.5+1,color:Math.random()>0.5?'#5EC8FF':'#E8C778',type:'glow'});
+  }
+}
+
+const c2 = document.getElementById('scene-canvas');
+const ctx2 = c2.getContext('2d');
+c2.width=window.innerWidth; c2.height=window.innerHeight;
+window.addEventListener('resize',()=>{ c2.width=window.innerWidth; c2.height=window.innerHeight; });
+
+function sceneLoop(){
+  const w=c2.width,h=c2.height;
+  sceneTime++;
+  ctx2.clearRect(0,0,w,h);
+  const scene = SCENES[currentScene];
+  if(!scene){ sceneAnimId=requestAnimationFrame(sceneLoop); return; }
+
+  // Beranda gets explosions; others get ambient
+  if(currentScene==='beranda'){
+    if(sceneTime-lastSceneExp>90+Math.random()*130){ lastSceneExp=sceneTime;
+      spawnSceneExplosion(ctx2,w,h,Math.random()*w*0.8+w*0.1,Math.random()*h*0.5+h*0.1,Math.random()*0.8+0.5); }
+    if(sceneTime-lastSceneBurst>120+Math.random()*150){ lastSceneBurst=sceneTime;
+      spawnSceneEnergyBurst(ctx2,w,h,Math.random()*w*0.7,Math.random()*h*0.5+h*0.1); }
+  }
+
+  // Draw particles
+  sceneParticles.forEach(p => {
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.04; p.vx*=0.97; p.life-=p.decay;
+    const a=Math.max(0,p.life);
+    if(p.type==='glow'){
+      const g=ctx2.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3);
+      const isBlue=p.color.startsWith('#5E');
+      g.addColorStop(0,isBlue?`rgba(94,200,255,${a*0.9})`:`rgba(232,199,120,${a*0.9})`);
+      g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx2.beginPath(); ctx2.arc(p.x,p.y,p.r*3,0,Math.PI*2); ctx2.fillStyle=g; ctx2.fill();
+    } else if(p.type==='spark'){
+      const hex=p.color.replace('#',''); const r=parseInt(hex.slice(0,2),16),g2=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
+      ctx2.beginPath(); ctx2.moveTo(p.x,p.y); ctx2.lineTo(p.x-p.vx*4,p.y-p.vy*4);
+      ctx2.strokeStyle=`rgba(${r},${g2},${b},${a})`; ctx2.lineWidth=p.r*0.5; ctx2.stroke();
+    } else {
+      const hex=p.color.replace('#',''); const r=parseInt(hex.slice(0,2),16),g2=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
+      ctx2.beginPath(); ctx2.arc(p.x,p.y,p.r*a,0,Math.PI*2);
+      ctx2.fillStyle=`rgba(${r},${g2},${b},${a})`; ctx2.fill();
+    }
+  });
+  sceneParticles=sceneParticles.filter(p=>p.life>0&&p.y<h+20);
+
+  // Call scene-specific ambient draw
+  if(scene.drawFn) scene.drawFn(ctx2,w,h,sceneTime);
+
+  sceneAnimId=requestAnimationFrame(sceneLoop);
+}
+sceneLoop();
+
+// Initial beranda explosions
+setTimeout(()=>{
+  const w=c2.width,h=c2.height;
+  spawnSceneExplosion(ctx2,w,h,w*0.75,h*0.38,1.4);
+  spawnSceneExplosion(ctx2,w,h,w*0.2,h*0.5,1.0);
+  spawnSceneEnergyBurst(ctx2,w,h,w*0.5,h*0.32);
+},500);
+
+// SVG layer switch
+const svgLayer = document.getElementById('scene-svg-layer');
+const tabFlash = document.getElementById('tab-flash');
+
+function switchScene(tabName){
+  currentScene=tabName;
+  sceneParticles=[];
+  sceneLocalParticles=[];
+  lastLocalSpawn=0;
+  lastSceneExp=0; lastSceneBurst=0; sceneTime=0;
+
+  const scene=SCENES[tabName];
+  if(!scene) return;
+
+  // Flash transition
+  tabFlash.style.background=scene.flashColor||'rgba(255,255,255,0.08)';
+  tabFlash.classList.add('show');
+  setTimeout(()=>tabFlash.classList.remove('show'), 200);
+
+  // Swap SVG layer
+  svgLayer.innerHTML = scene.svg ? scene.svg() : '';
+
+  // Trigger intro particles
+  const w=c2.width,h=c2.height;
+  if(tabName==='beranda'){
+    setTimeout(()=>{ spawnSceneExplosion(ctx2,w,h,w*0.7,h*0.35,1.2); spawnSceneEnergyBurst(ctx2,w,h,w*0.4,h*0.3); },100);
+  }
+}
+
+// Initial scene
+switchScene('beranda');
+
+
+// ── STARS — multi-layer parallax + shooting stars ──
+(function(){
+  const c = document.getElementById('stars-canvas');
+  const ctx = c.getContext('2d');
+  let stars = [];
+  let shootingStars = [];
+  let mouseX = 0, mouseY = 0;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+  }
+  function init(){
+    stars = [];
+    // 3 lapisan kedalaman: jauh (kecil, lambat) → dekat (besar, lebih responsif ke parallax)
+    const layers = [
+      { count: 90,  rMin: 0.3, rMax: 0.7, depth: 0.2 },
+      { count: 70,  rMin: 0.6, rMax: 1.2, depth: 0.5 },
+      { count: 40,  rMin: 1.0, rMax: 1.8, depth: 0.9 },
+    ];
+    layers.forEach(layer => {
+      for (let i=0; i<layer.count; i++){
+        stars.push({
+          x: Math.random()*c.width,
+          y: Math.random()*c.height,
+          r: Math.random()*(layer.rMax-layer.rMin)+layer.rMin,
+          a: Math.random(),
+          speed: Math.random()*0.008+0.003,
+          phase: Math.random()*Math.PI*2,
+          depth: layer.depth,
+        });
+      }
+    });
+  }
+  function maybeSpawnShootingStar(){
+    if (reduceMotion) return;
+    if (Math.random() < 0.006 && shootingStars.length < 2){
+      const startX = Math.random()*c.width*0.6;
+      shootingStars.push({
+        x: startX, y: Math.random()*c.height*0.4,
+        len: Math.random()*80+60,
+        vx: Math.random()*6+5, vy: Math.random()*3+2,
+        life: 1,
+      });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      s.phase += s.speed;
+      const alpha = (Math.sin(s.phase)+1)/2 * 0.7 + 0.15;
+      const px = s.x + mouseX * s.depth * 14;
+      const py = s.y + mouseY * s.depth * 14;
+      ctx.beginPath();
+      ctx.arc(px, py, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(234,242,255,${alpha})`;
+      ctx.fill();
+    });
+
+    maybeSpawnShootingStar();
+    shootingStars.forEach(ss => {
+      ctx.save();
+      const grad = ctx.createLinearGradient(ss.x, ss.y, ss.x-ss.len, ss.y-ss.len*0.5);
+      grad.addColorStop(0, `rgba(232,199,120,${ss.life})`);
+      grad.addColorStop(1, 'rgba(232,199,120,0)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(ss.x, ss.y);
+      ctx.lineTo(ss.x-ss.len, ss.y-ss.len*0.5);
+      ctx.stroke();
+      ctx.restore();
+      ss.x += ss.vx; ss.y += ss.vy; ss.life -= 0.02;
+    });
+    shootingStars = shootingStars.filter(ss => ss.life > 0 && ss.x < c.width+100);
+
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', ()=>{ resize(); init(); });
+  if (!reduceMotion) {
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5);
+      mouseY = (e.clientY / window.innerHeight - 0.5);
+    });
+  }
+  resize(); init(); draw();
+})();
+
+// ── COUNTDOWN ──
+const JADIAN = new Date('2026-01-10T00:00:00');
+function updateCountdown(){
+  const now = new Date();
+  const diff = Math.max(0, now - JADIAN);
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor((diff%86400000)/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  document.getElementById('cd-hari').textContent   = String(d).padStart(3,'0');
+  document.getElementById('cd-jam').textContent    = String(h).padStart(2,'0');
+  document.getElementById('cd-menit').textContent  = String(m).padStart(2,'0');
+  document.getElementById('cd-detik').textContent  = String(s).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ── TAB NAV ──
+document.querySelectorAll('.nav-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById(tab).classList.add('active');
+    // Switch cinematic background scene
+    if(typeof switchScene === 'function') switchScene(tab);
+  });
+});
+
+// ── HEARTS PARTICLE ──
+function spawnHearts(x, y, n=6){
+  for(let i=0;i<n;i++){
+    const el = document.createElement('div');
+    el.className='heart-particle';
+    el.textContent = ['💙','💗','✨','💫','⭐'][Math.floor(Math.random()*5)];
+    el.style.left = (x + (Math.random()-0.5)*60)+'px';
+    el.style.top  = (y + (Math.random()-0.5)*30)+'px';
+    el.style.animationDelay = (Math.random()*0.3)+'s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 1600);
+  }
+}
+
+// ── SIAPA YANG SALAH ──
+const salahBtn = document.getElementById('salah-btn');
+const salahResult = document.getElementById('salah-result');
+const salahNames = [
+  {name:'Rizky', msgs:['Rizky nih yang salah! 😂','Kamu Rizky, kamu yang keliru hehe','Salah satu kali boleh kan, Rizky? 😅']},
+  {name:'Nadifa', msgs:['Nadifa deh yang salah kali ini 🙈','Eh Nadifa, kamu nih 😄','Nadifa! Tapi tetap disayang ya 💙']},
+];
+salahBtn.addEventListener('click',(e)=>{
+  const rect = e.target.getBoundingClientRect();
+  spawnHearts(rect.left + rect.width/2, rect.top, 8);
+  salahBtn.disabled=true;
+  let count=0;
+  const interval = setInterval(()=>{
+    const r = salahNames[Math.floor(Math.random()*2)];
+    salahResult.innerHTML = `<span class="the-name">${r.name}</span>`;
+    count++;
+    if(count>12){
+      clearInterval(interval);
+      const winner = salahNames[Math.floor(Math.random()*2)];
+      const msg = winner.msgs[Math.floor(Math.random()*3)];
+      salahResult.innerHTML = `<span class="the-name">${msg}</span>`;
+      salahBtn.disabled=false;
+    }
+  }, 80);
+});
+
+// ── SPIN WHEEL ──
+const WHEEL_DATA = {
+  bayar: {
+    items: ['Rizky bayar! 💸','Nadifa bayar! 💳','Bayar bareng deh','Siapa yang pegang dompet?','Yang tua bayar 😂','Pinjam dulu sama ortu 🙏'],
+    colors: ['#0D47A1','#1565C0','#1976D2','#1E88E5','#2196F3','#42A5F5']
+  },
+  makan: {
+    items: ['Bakso 🍜','Mie Ayam 🍜','Burger 🍔','Pizza 🍕','Sushi 🍱','Nasi Padang 🍛','KFC 🍗','Boba 🧋','Es Krim 🍦','Sate 🍢'],
+    colors: ['#880E4F','#AD1457','#C2185B','#D81B60','#E91E63','#EC407A','#F06292','#F48FB1','#8D1F1F','#B71C1C']
+  },
+  custom: {
+    items: ['Item 1','Item 2','Item 3'],
+    colors: ['#1A237E','#283593','#303F9F','#3949AB','#3F51B5','#5C6BC0','#7986CB','#9FA8DA']
+  }
+};
+let currentWheel = 'bayar';
+let isSpinning = false;
+let spinAngle = 0;
+let customItems = ['Item 1','Item 2','Item 3'];
+
+const wheelCanvas = document.getElementById('wheel-canvas');
+const wCtx = wheelCanvas.getContext('2d');
+
+function getWheelItems(){
+  if(currentWheel==='custom') return customItems;
+  return WHEEL_DATA[currentWheel].items;
+}
+function getWheelColors(){
+  if(currentWheel==='custom') return WHEEL_DATA.custom.colors;
+  return WHEEL_DATA[currentWheel].colors;
+}
+
+function drawWheel(angle){
+  const W=280,H=280,cx=140,cy=140,R=128;
+  wCtx.clearRect(0,0,W,H);
+  const items = getWheelItems();
+  const colors = getWheelColors();
+  const slice = (Math.PI*2)/items.length;
+
+  // shadow
+  wCtx.save();
+  wCtx.shadowColor='rgba(94,200,255,0.25)';
+  wCtx.shadowBlur=20;
+
+  items.forEach((item,i)=>{
+    const start = angle + i*slice;
+    const end = start + slice;
+    wCtx.beginPath();
+    wCtx.moveTo(cx,cy);
+    wCtx.arc(cx,cy,R,start,end);
+    wCtx.closePath();
+    wCtx.fillStyle = colors[i%colors.length];
+    wCtx.fill();
+    wCtx.strokeStyle='rgba(255,255,255,0.08)';
+    wCtx.lineWidth=1;
+    wCtx.stroke();
+  });
+  wCtx.restore();
+
+  // text
+  items.forEach((item,i)=>{
+    const mid = angle + i*slice + slice/2;
+    wCtx.save();
+    wCtx.translate(cx,cy);
+    wCtx.rotate(mid);
+    wCtx.textAlign='right';
+    wCtx.fillStyle='rgba(255,255,255,0.92)';
+    wCtx.font=`${Math.max(9,13-Math.floor(item.length/8))}px Inter, sans-serif`;
+    wCtx.fillText(item.length>14?item.slice(0,13)+'…':item, R-10, 5);
+    wCtx.restore();
+  });
+
+  // center circle
+  wCtx.beginPath();
+  wCtx.arc(cx,cy,18,0,Math.PI*2);
+  wCtx.fillStyle='#021430';
+  wCtx.fill();
+  wCtx.strokeStyle='rgba(255,209,0,0.5)';
+  wCtx.lineWidth=2;
+  wCtx.stroke();
+
+  // pointer
+  wCtx.beginPath();
+  wCtx.moveTo(cx+R-4,cy);
+  wCtx.lineTo(cx+R+22,cy-9);
+  wCtx.lineTo(cx+R+22,cy+9);
+  wCtx.closePath();
+  wCtx.fillStyle='#FFD100';
+  wCtx.fill();
+}
+
+drawWheel(0);
+
+document.getElementById('spin-btn').addEventListener('click',function(e){
+  if(isSpinning) return;
+  const items = getWheelItems();
+  if(items.length<2) return;
+  isSpinning=true;
+  this.disabled=true;
+  document.getElementById('wheel-result').textContent='';
+
+  const totalSpin = Math.PI*2*8 + Math.random()*Math.PI*2;
+  const duration = 4000;
+  const start = performance.now();
+  const startAngle = spinAngle;
+
+  function animate(now){
+    const elapsed = now - start;
+    const progress = Math.min(elapsed/duration, 1);
+    const ease = 1 - Math.pow(1-progress, 4);
+    spinAngle = startAngle + totalSpin * ease;
+    drawWheel(spinAngle);
+    if(progress<1){ requestAnimationFrame(animate); }
+    else{
+      isSpinning=false;
+      document.getElementById('spin-btn').disabled=false;
+      const slice = Math.PI*2/items.length;
+      const normalized = ((-spinAngle % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+      const idx = Math.floor(normalized/slice) % items.length;
+      const winner = items[idx];
+      document.getElementById('wheel-result').textContent = '🎉 ' + winner;
+      const rect = wheelCanvas.getBoundingClientRect();
+      spawnHearts(rect.left+rect.width/2, rect.top+rect.height/2, 10);
+    }
+  }
+  requestAnimationFrame(animate);
+});
+
+// wheel type buttons
+document.querySelectorAll('.type-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentWheel = btn.dataset.wheel;
+    spinAngle=0;
+    drawWheel(0);
+    document.getElementById('wheel-result').textContent='';
+    document.getElementById('wheel-items-wrap').style.display = currentWheel==='custom'?'block':'none';
+    if(currentWheel==='custom') renderWheelTags();
+  });
+});
+
+function renderWheelTags(){
+  const wrap = document.getElementById('wheel-tags');
+  wrap.innerHTML = customItems.map((item,i)=>`
+    <div class="wheel-tag">${item}
+      <button class="del-btn" data-i="${i}">✕</button>
+    </div>`).join('');
+  wrap.querySelectorAll('.del-btn').forEach(b=>{
+    b.addEventListener('click',()=>{
+      customItems.splice(parseInt(b.dataset.i),1);
+      renderWheelTags(); drawWheel(spinAngle);
+    });
+  });
+}
+document.getElementById('wheel-add-btn').addEventListener('click',()=>{
+  const v = document.getElementById('wheel-add-input').value.trim();
+  if(!v||customItems.length>=10) return;
+  customItems.push(v);
+  document.getElementById('wheel-add-input').value='';
+  renderWheelTags(); drawWheel(spinAngle);
+});
+
+// ── DATE IDEAS ──
+const DATE_IDEAS = {
+  rumah:[
+    {e:'🎬',t:'Nonton film bareng sambil makan popcorn dan rebahan di kasur',cat:'Di Rumah'},
+    {e:'🍳',t:'Masak makan malam bersama, siapapun yang gosong cuci piring',cat:'Di Rumah'},
+    {e:'🎮',t:'Game bareng — siapa yang kalah traktir minuman',cat:'Di Rumah'},
+    {e:'🃏',t:'Main kartu atau board game, taruhan manja',cat:'Di Rumah'},
+    {e:'📸',t:'Photo session lucu-lucuan di rumah, hasilnya dijadiin wallpaper',cat:'Di Rumah'},
+    {e:'🎵',t:'Playlist karaoke berdua, nyanyi-nyanyi lagu favorit kalian',cat:'Di Rumah'},
+  ],
+  keluar:[
+    {e:'🌅',t:'Nonton sunset bareng di tempat tinggi dengan minuman hangat',cat:'Keluar'},
+    {e:'🛍️',t:'Jalan-jalan ke mall, windowshopping sambil pegang tangan',cat:'Keluar'},
+    {e:'☕',t:'Cafe hopping — coba 3 cafe berbeda dalam satu hari',cat:'Keluar'},
+    {e:'🌃',t:'Jalan malam, foto-foto aesthetic di spot cantik kota',cat:'Keluar'},
+    {e:'🎡',t:'Ke taman hiburan atau wahana — siapa yang penakut ketahuan',cat:'Keluar'},
+    {e:'🏖️',t:'Piknik sore di taman, bawa bekel makanan kesukaan',cat:'Keluar'},
+  ],
+  murah:[
+    {e:'🌙',t:'Stargazing malam hari di tempat sepi, bawa selimut',cat:'Budget Hemat'},
+    {e:'🍢',t:'Kulineran jajanan kaki lima keliling kota',cat:'Budget Hemat'},
+    {e:'📚',t:'Ke perpustakaan atau toko buku, saling rekomendasi buku',cat:'Budget Hemat'},
+    {e:'🌳',t:'Olahraga bareng di taman pagi hari lalu sarapan nasi uduk',cat:'Budget Hemat'},
+    {e:'🎨',t:'Mewarnai atau sketsa bareng di rumah pakai bahan seadanya',cat:'Budget Hemat'},
+  ],
+  special:[
+    {e:'✈️',t:'Rencanakan trip singkat ke kota terdekat yang belum pernah dikunjungi',cat:'Spesial'},
+    {e:'🌹',t:'Dinner romantis candlelight di restoran pilihan, dress up cantik',cat:'Spesial'},
+    {e:'🎁',t:'Buat scrapbook kenangan bersama dari foto-foto favorit kalian',cat:'Spesial'},
+    {e:'💌',t:'Tukar surat cinta tulisan tangan, baca bareng ditemani lagu favorit',cat:'Spesial'},
+    {e:'🌊',t:'Road trip dadakan tanpa tujuan pasti — ikuti intuisi',cat:'Spesial'},
+  ]
+};
+let ideaCat = 'semua';
+document.querySelectorAll('.filter-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    ideaCat = chip.dataset.cat;
+  });
+});
+document.getElementById('gen-idea-btn').addEventListener('click',function(e){
+  let pool = ideaCat==='semua'
+    ? Object.values(DATE_IDEAS).flat()
+    : DATE_IDEAS[ideaCat]||[];
+  if(!pool.length) return;
+  const idea = pool[Math.floor(Math.random()*pool.length)];
+  const el = document.getElementById('idea-result');
+  el.style.opacity='0';
+  setTimeout(()=>{
+    el.innerHTML=`<span class="idea-emoji">${idea.e}</span><div class="idea-text">${idea.t}</div><span class="idea-tag">${idea.cat}</span>`;
+    el.style.opacity='1';
+  },200);
+  const rect = e.target.getBoundingClientRect();
+  spawnHearts(rect.left+rect.width/2, rect.top, 5);
+});
+
+// ── CERITA KITA — timeline momen, datanya beneran diisi sendiri ──
+const STORY_KEY = 'rn_story_milestones';
+let storyItems = JSON.parse(localStorage.getItem(STORY_KEY) || 'null') || [
+  { id: 1, date: '2026-01-10', emoji: '💙', title: 'Jadian', note: 'Awal dari segalanya.' },
+];
+let storyId = storyItems.length ? Math.max(...storyItems.map(s=>s.id)) + 1 : 1;
+
+function saveStory(){
+  try { localStorage.setItem(STORY_KEY, JSON.stringify(storyItems)); } catch(e) {}
+}
+
+function fmtStoryDate(iso){
+  if (!iso) return '';
+  const d = new Date(iso + 'T00:00:00');
+  if (isNaN(d.getTime())) return iso;
+  const bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function renderStory(){
+  const wrap = document.getElementById('story-wrap');
+  if (!wrap) return;
+
+  if (!storyItems.length) {
+    wrap.innerHTML = `<div class="timeline-empty">Belum ada momen tersimpan.<br>Tambahkan momen pertama kalian di atas! 🎬</div>`;
+    return;
+  }
+
+  const sorted = storyItems.slice().sort((a,b) => a.date.localeCompare(b.date));
+
+  wrap.innerHTML = sorted.map((s, i) => `
+    <div class="timeline-item">
+      <div class="scene-marker">🎞️</div>
+      <span class="scene-label">Scene ${String(i+1).padStart(2,'0')}</span>
+      <div class="timeline-card">
+        <div class="timeline-head">
+          <div class="timeline-title"><span class="emoji">${s.emoji||'💙'}</span>${s.title}</div>
+          <div class="timeline-date">${fmtStoryDate(s.date)}</div>
+        </div>
+        ${s.note ? `<div class="timeline-note">${s.note}</div>` : ''}
+        <button class="timeline-del" data-id="${s.id}">Hapus</button>
+      </div>
+    </div>
+  `).join('');
+
+  wrap.querySelectorAll('.timeline-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      storyItems = storyItems.filter(s => s.id !== parseInt(btn.dataset.id));
+      saveStory();
+      renderStory();
+    });
+  });
+}
+
+document.getElementById('story-add-btn').addEventListener('click', (e) => {
+  const dateEl  = document.getElementById('story-date-input');
+  const titleEl = document.getElementById('story-title-input');
+  const emojiEl = document.getElementById('story-emoji-input');
+  const noteEl  = document.getElementById('story-note-input');
+
+  const date  = dateEl.value;
+  const title = titleEl.value.trim();
+  if (!date || !title) {
+    alert('Isi tanggal dan nama momennya dulu ya 😊');
+    return;
+  }
+
+  storyItems.push({
+    id: storyId++,
+    date,
+    title,
+    emoji: emojiEl.value.trim() || '💙',
+    note: noteEl.value.trim(),
+  });
+  saveStory();
+  renderStory();
+
+  dateEl.value = ''; titleEl.value = ''; emojiEl.value = ''; noteEl.value = '';
+  const rect = e.target.getBoundingClientRect();
+  spawnHearts(rect.left+rect.width/2, rect.top, 6);
+});
+
+renderStory();
+
+// ── BUCKET LIST ──
+let bucketItems = [
+  {id:1,text:'Nonton bioskop berdua 🎬',done:false,emoji:'🎬'},
+  {id:2,text:'Masak makan malam romantis 🍝',done:false,emoji:'🍝'},
+  {id:3,text:'Road trip ke tempat baru 🚗',done:false,emoji:'🚗'},
+  {id:4,text:'Foto berdua di pantai 🏖️',done:false,emoji:'🏖️'},
+  {id:5,text:'Nonton konser bareng 🎵',done:false,emoji:'🎵'},
+  {id:6,text:'Liburan ke luar kota 🌆',done:false,emoji:'🌆'},
+];
+let bucketId = 10;
+
+function renderBucket(){
+  const list = document.getElementById('bucket-list');
+  const done = bucketItems.filter(i=>i.done).length;
+  const total = bucketItems.length;
+  const pct = total>0?(done/total*100).toFixed(0):0;
+  document.getElementById('bucket-bar').style.width = pct+'%';
+  document.getElementById('bucket-prog-label').textContent = `${done} / ${total} selesai`;
+
+  list.innerHTML = bucketItems.map(item=>`
+    <div class="bucket-item${item.done?' done':''}" data-id="${item.id}">
+      <div class="bucket-check">${item.done?'✓':''}</div>
+      <div class="bucket-text">${item.text}</div>
+      <button class="bucket-del" data-id="${item.id}">✕</button>
+    </div>`).join('');
+
+  list.querySelectorAll('.bucket-item').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      if(e.target.classList.contains('bucket-del')) return;
+      const id=parseInt(el.dataset.id);
+      const item=bucketItems.find(i=>i.id===id);
+      item.done=!item.done;
+      if(item.done) spawnHearts(e.clientX,e.clientY,6);
+      renderBucket();
+    });
+  });
+  list.querySelectorAll('.bucket-del').forEach(btn=>{
+    btn.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      bucketItems=bucketItems.filter(i=>i.id!==parseInt(btn.dataset.id));
+      renderBucket();
+    });
+  });
+}
+document.getElementById('bucket-add-btn').addEventListener('click',()=>{
+  const v = document.getElementById('bucket-add-input').value.trim();
+  if(!v) return;
+  bucketItems.push({id:++bucketId,text:v,done:false});
+  document.getElementById('bucket-add-input').value='';
+  renderBucket();
+});
+renderBucket();
+
+// ── FIREBASE CONFIG ──
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBryyDEEpcZ_TUsssE34lhxMljDI3-MRzY",
+  authDomain: "rizky-nadifa.firebaseapp.com",
+  databaseURL: "https://rizky-nadifa-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "rizky-nadifa",
+  storageBucket: "rizky-nadifa.firebasestorage.app",
+  messagingSenderId: "1081057344980",
+  appId: "1:1081057344980:web:134c7c72e2556eb1766a41"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getDatabase(fbApp);
+const mediaRef = ref(db, 'mediaItems');
+
+// ── GALERI — Cloudinary + Firebase Permanent Storage ──
+const CL_CLOUD  = 'dr6exlchb';
+const CL_PRESET = 'dm7g4tct';
+const CL_UPLOAD = `https://api.cloudinary.com/v1_1/${CL_CLOUD}/auto/upload`;
+
+let mediaItems = [];
+let mediaId = 1;
+
+// Load dari Firebase realtime
+onValue(mediaRef, (snapshot) => {
+  mediaItems = [];
+  snapshot.forEach((child) => {
+    mediaItems.push({ ...child.val(), firebaseKey: child.key });
+  });
+  mediaId = mediaItems.length ? Math.max(...mediaItems.map(m => m.id)) + 1 : 1;
+  renderGallery();
+});
+
+async function saveMedia(item) {
+  try { await push(mediaRef, item); } catch(e) { console.error('Firebase save error:', e); }
+}
+
+async function deleteMedia(firebaseKey) {
+  try { await remove(ref(db, 'mediaItems/' + firebaseKey)); } catch(e) { console.error('Firebase delete error:', e); }
+}
+
+// Upload satu file ke Cloudinary
+async function uploadToCloudinary(file, onProgress) {
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CL_PRESET);
+
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', CL_UPLOAD);
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable && onProgress) {
+        onProgress(Math.round(e.loaded / e.total * 100));
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        const res = JSON.parse(xhr.responseText);
+        resolve(res);
+      } else {
+        reject(new Error('Upload gagal: ' + xhr.status));
+      }
+    };
+    xhr.onerror = () => reject(new Error('Koneksi gagal'));
+    xhr.send(fd);
+  });
+}
+
+// Handle file input
+document.getElementById('file-upload').addEventListener('change', async function() {
+  const files = Array.from(this.files);
+  if (!files.length) return;
+
+  const progressWrap = document.getElementById('upload-progress-wrap');
+  const progressBar  = document.getElementById('upload-progress-bar');
+  const progressLbl  = document.getElementById('upload-progress-label');
+  const uploadIcon   = document.getElementById('upload-icon');
+  const uploadText   = document.getElementById('upload-text');
+  const uploadSub    = document.getElementById('upload-sub');
+
+  progressWrap.style.display = 'block';
+  uploadIcon.textContent = '⏳';
+  uploadText.textContent = 'Sedang mengupload...';
+  uploadSub.textContent  = '';
+
+  let uploaded = 0;
+  let failed = 0;
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const isVideo = file.type.startsWith('video/');
+
+    progressLbl.textContent = `Mengupload ${i + 1} dari ${files.length}: ${file.name}`;
+
+    try {
+      const res = await uploadToCloudinary(file, (pct) => {
+        const overall = Math.round(((i + pct / 100) / files.length) * 100);
+        progressBar.style.width = overall + '%';
+      });
+
+      // Simpan URL dari Cloudinary ke Firebase
+      const newItem = {
+        id: mediaId++,
+        src: res.secure_url,
+        thumb: isVideo
+          ? res.secure_url.replace('/upload/', '/upload/w_400,q_auto/')
+          : res.secure_url.replace('/upload/', '/upload/w_400,h_400,c_fill,q_auto/'),
+        type: isVideo ? 'video' : 'image',
+        name: file.name,
+        uploadedAt: new Date().toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})
+      };
+      await saveMedia(newItem);
+      uploaded++;
+    } catch(err) {
+      failed++;
+      console.error('Upload error:', err);
+    }
+  }
+
+  // Reset UI
+  progressBar.style.width = '100%';
+  progressLbl.textContent = `✓ ${uploaded} berhasil diupload${failed > 0 ? ` · ${failed} gagal` : ''}`;
+  uploadIcon.textContent = '✅';
+  uploadText.textContent = 'Upload selesai!';
+  uploadSub.textContent  = `${uploaded} file tersimpan permanen di cloud`;
+
+  setTimeout(() => {
+    progressWrap.style.display = 'none';
+    progressBar.style.width = '0%';
+    uploadIcon.textContent = '📁';
+    uploadText.textContent = 'Tap untuk pilih foto atau video';
+    uploadSub.textContent  = 'JPG, PNG, MP4 dll · Langsung tersimpan permanen ☁️';
+  }, 3000);
+
+  renderGallery();
+  if (uploaded > 0) spawnHearts(window.innerWidth / 2, window.innerHeight / 3, 8);
+  this.value = ''; // reset input
+});
+
+function renderGallery() {
+  const grid      = document.getElementById('gallery-grid');
+  const colLabel  = document.getElementById('gallery-col-label');
+  const countLbl  = document.getElementById('gallery-count-label');
+  const storageEl = document.getElementById('storage-info');
+
+  const imgCount   = mediaItems.filter(m => m.type === 'image').length;
+  const vidCount   = mediaItems.filter(m => m.type === 'video').length;
+  if (storageEl && mediaItems.length > 0) {
+    storageEl.textContent = `☁️ ${imgCount} foto · ${vidCount} video — tersimpan permanen di Cloudinary`;
+  } else if (storageEl) {
+    storageEl.textContent = '';
+  }
+
+  if (!mediaItems.length) {
+    grid.innerHTML = `<div class="gallery-empty">
+      <span class="big-icon">📷</span>
+      <div>Belum ada foto.</div>
+      <div style="margin-top:4px;font-size:0.75rem;">Tap tombol di atas untuk mulai tambahkan momen kalian!</div>
+    </div>`;
+    colLabel.style.display = 'none';
+    return;
+  }
+
+  colLabel.style.display = 'flex';
+  countLbl.textContent = `${mediaItems.length} foto/video`;
+
+  // Variasi ukuran masonry — pola deterministik berdasar id (bukan acak murni),
+  // supaya layout stabil tiap kali di-render ulang, bukan "lompat-lompat".
+  function sizeClassFor(id){
+    const m = id % 5;
+    if (m === 0) return 'tall';
+    if (m === 3) return 'wide';
+    return '';
+  }
+
+  grid.innerHTML = mediaItems.slice().reverse().map((m, idx) => `
+    <div class="gallery-item ${sizeClassFor(m.id)}" data-id="${m.id}" style="animation-delay:${Math.min(idx*0.04,0.4)}s;">
+      ${m.type === 'video'
+        ? `<video src="${m.src}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover;"></video>
+           <span class="video-badge">▶ Video</span>`
+        : `<img src="${m.thumb || m.src}" alt="momen" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`
+      }
+      <div class="gallery-item-date" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.6));padding:18px 8px 6px;font-size:0.6rem;color:rgba(255,255,255,0.7);text-align:right;font-family:var(--font-m);">${m.uploadedAt || ''}</div>
+      <button class="del-media" data-id="${m.id}" title="Hapus">✕</button>
+    </div>`).join('');
+
+  grid.querySelectorAll('.gallery-item').forEach(el => {
+    el.addEventListener('click', e => {
+      if (e.target.classList.contains('del-media')) return;
+      const id = parseInt(el.dataset.id);
+      const m = mediaItems.find(i => i.id === id);
+      if (m) openLightbox(m);
+    });
+  });
+
+  grid.querySelectorAll('.del-media').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const item = mediaItems.find(i => i.id === parseInt(btn.dataset.id));
+      if (item && item.firebaseKey) deleteMedia(item.firebaseKey);
+    });
+  });
+
+  renderSprockets();
+}
+
+// Titik-titik sprocket (lubang film strip) — jumlahnya menyesuaikan lebar galeri
+function renderSprockets(){
+  const top = document.getElementById('sprocket-top');
+  const bottom = document.getElementById('sprocket-bottom');
+  if (!top || !bottom) return;
+  const dots = Array.from({length: 14}).map(()=>'<span></span>').join('');
+  top.innerHTML = dots;
+  bottom.innerHTML = dots;
+}
+
+function openLightbox(m) {
+  const lb = document.createElement('div');
+  lb.className = 'lightbox';
+  const caption = m.uploadedAt ? `<div class="lightbox-caption">${m.uploadedAt}</div>` : '';
+  if (m.type === 'video') {
+    lb.innerHTML = `<div class="lightbox-letterbox-top"></div><div class="lightbox-letterbox-bottom"></div>
+      <button class="lightbox-close">✕</button>
+      <video src="${m.src}" controls autoplay style="max-height:80vh;max-width:90vw;border-radius:6px;"></video>
+      ${caption}`;
+  } else {
+    lb.innerHTML = `<div class="lightbox-letterbox-top"></div><div class="lightbox-letterbox-bottom"></div>
+      <button class="lightbox-close">✕</button>
+      <img src="${m.src}" style="max-height:80vh;max-width:90vw;border-radius:6px;object-fit:contain;">
+      ${caption}`;
+  }
+  document.body.appendChild(lb);
+  lb.querySelector('.lightbox-close').addEventListener('click', () => lb.remove());
+  lb.addEventListener('click', e => { if (e.target === lb) lb.remove(); });
+}
+
+document.getElementById('clear-all-btn').addEventListener('click', async () => {
+  if (!confirm('Hapus semua foto & video dari galeri?\n(File di Cloudinary tidak ikut terhapus)')) return;
+  for (const item of mediaItems) {
+    if (item.firebaseKey) await deleteMedia(item.firebaseKey);
+  }
+});
+
+renderGallery();
+
+// ── LOVE NOTES ──
+let notesList = [
+  {id:1, from:'Rizky', text:'Makasih ya udah mau jadi bagian dari hidupku. Aku seneng banget bisa kenal kamu 🏎️', time:'Hari pertama'},
+  {id:2, from:'Nadifa', text:'Kamu tuh bikin aku senyum-senyum sendiri tiap kali inget kamu. Semoga kita selalu gini ya 🏁', time:'Hari pertama'},
+];
+let noteId=10;
+
+function fmtTime(){
+  return new Date().toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+}
+function renderNotes(){
+  const wrap=document.getElementById('notes-list');
+  if(!notesList.length){
+    wrap.innerHTML=`<div style="text-align:center;padding:24px;color:var(--faint);font-size:0.85rem;">Belum ada pesan. Tulis yang pertama! 💌</div>`;
+    return;
+  }
+  wrap.innerHTML=notesList.slice().reverse().map(n=>`
+    <div class="note-bubble from-${n.from.toLowerCase()}">
+      <div class="note-meta">
+        <span class="note-sender">${n.from === 'Rizky' ? '🏎️ Rizky' : '🏁 Nadifa'}</span>
+        <span style="display:flex;align-items:center;gap:6px;">
+          <span>${n.time}</span>
+          <button class="note-del" data-id="${n.id}">✕</button>
+        </span>
+      </div>
+      <div class="note-text">${n.text}</div>
+    </div>`).join('');
+
+  wrap.querySelectorAll('.note-del').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      notesList=notesList.filter(n=>n.id!==parseInt(btn.dataset.id));
+      renderNotes();
+    });
+  });
+}
+document.getElementById('note-send-btn').addEventListener('click',()=>{
+  const text=document.getElementById('note-input').value.trim();
+  const from=document.getElementById('note-from').value;
+  if(!text) return;
+  notesList.push({id:++noteId, from, text, time:fmtTime()});
+  document.getElementById('note-input').value='';
+  renderNotes();
+  spawnHearts(window.innerWidth/2, window.innerHeight/2, 8);
+});
+renderNotes();
+
+// ── SCROLL REVEAL — fade+rise saat card masuk viewport ──
+(function(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.card').forEach(el => el.classList.add('reveal'));
+  if (reduceMotion || typeof IntersectionObserver === 'undefined') {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Pengaman: card paling atas di section yang aktif saat load (biasanya sudah
+  // terlihat duluan sebelum observer sempat "siap") langsung ditampilkan juga.
+  const initialActive = document.querySelector('.section.active');
+  if (initialActive) {
+    const firstCard = initialActive.querySelector('.reveal');
+    if (firstCard) firstCard.classList.add('in-view');
+  }
+
+  // Saat pindah tab, card di section yang baru aktif belum ter-observe sebelumnya
+  // (display:none membuat IntersectionObserver tidak pernah trigger) — jadi begitu
+  // section diaktifkan, langsung tampilkan reveal-nya tanpa menunggu scroll.
+  document.querySelectorAll('.nav-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setTimeout(() => {
+        const activeSection = document.querySelector('.section.active');
+        if (activeSection) {
+          activeSection.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+        }
+      }, 50);
+    });
+  });
+})();
+</script>
+</body>
+</html>
